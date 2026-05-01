@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 kotlin {
@@ -9,4 +10,5 @@ kotlin {
 dependencies {
     implementation(kotlin("stdlib"))
     api(project(":annotations"))
+    ksp(project(":codegen"))
 }
