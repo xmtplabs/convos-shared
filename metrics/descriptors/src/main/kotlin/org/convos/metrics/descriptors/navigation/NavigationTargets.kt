@@ -39,6 +39,10 @@ interface ConversationNavigator {
     fun present(assistantInfo: AssistantInfoNavigator.Args)
     fun present(processingPowerInfo: ProcessingPowerInfoNavigator.Args)
     fun present(explodedInviteInfo: ExplodedInviteInfoNavigator.Args)
+    fun present(setupProfile: SetupProfileNavigator.Args)
+    fun present(inviteAccepted: InviteAcceptedNavigator.Args)
+    fun present(requestPushNotifications: RequestPushNotificationsNavigator.Args)
+    fun present(backwardsSecrecyInfo: BackwardsSecrecyInfoNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -90,6 +94,7 @@ interface ConversationInfoNavigator {
 
     fun navigateTo(edit: ConversationInfoEditNavigator.Args)
     fun navigateTo(membersList: MembersListNavigator.Args)
+    fun navigateTo(filesAndLinks: AssistantFilesLinksNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -133,6 +138,36 @@ interface ReactionsNavigator {
         val conversationId: String,
         val messageId: String,
     )
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface AssistantFilesLinksNavigator {
+    data class Args(val conversationId: String)
+
+    fun closed(context: ScreenContext)
+}
+
+// Conversation Onboarding
+
+@NavigationTarget
+interface SetupProfileNavigator {
+    class Args
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface InviteAcceptedNavigator {
+    class Args
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface RequestPushNotificationsNavigator {
+    class Args
 
     fun closed(context: ScreenContext)
 }
@@ -231,6 +266,8 @@ interface PinLimitInfoNavigator {
 interface LockedConvoInfoNavigator {
     data class Args(val conversationId: String)
 
+    fun present(lockConfirmation: LockConvoConfirmationNavigator.Args)
+
     fun closed(context: ScreenContext)
 }
 
@@ -286,6 +323,27 @@ interface ProcessingPowerInfoNavigator {
 @NavigationTarget
 interface ExplodedInviteInfoNavigator {
     class Args
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface BackwardsSecrecyInfoNavigator {
+    class Args
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface MaxedOutInfoNavigator {
+    class Args
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface LockConvoConfirmationNavigator {
+    data class Args(val conversationId: String)
 
     fun closed(context: ScreenContext)
 }
