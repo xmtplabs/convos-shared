@@ -7,6 +7,7 @@ import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.Modifier
+import org.convos.metrics.codegen.util.toSnakeCase
 
 class NavigationExtractor(private val logger: KSPLogger) {
 
@@ -44,7 +45,7 @@ class NavigationExtractor(private val logger: KSPLogger) {
         enumTypes: MutableMap<String, NavigationEnumType>,
     ): NavigationTargetDescriptor {
         val name = classDecl.simpleName.asString()
-        val metricsName = name.toSnakeCase()
+        val metricsName = name.removeSuffix("Navigator").toSnakeCase()
         val qualifiedName = classDecl.qualifiedName?.asString() ?: name
 
         val argsClass = classDecl.declarations
@@ -149,11 +150,5 @@ class NavigationExtractor(private val logger: KSPLogger) {
     companion object {
         private const val NAVIGATION_TARGET_ANNOTATION =
             "org.convos.metrics.annotations.NavigationTarget"
-
-        private fun String.toSnakeCase(): String =
-            removeSuffix("Navigator")
-                .replace(Regex("([a-z])([A-Z])"), "$1_$2")
-                .replace(Regex("([A-Z])([A-Z][a-z])"), "$1_$2")
-                .lowercase()
     }
 }

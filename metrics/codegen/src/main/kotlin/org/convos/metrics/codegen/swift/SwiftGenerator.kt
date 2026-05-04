@@ -2,6 +2,10 @@ package org.convos.metrics.codegen.swift
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
+import org.convos.metrics.codegen.core.CoreActionsDescriptor
+import org.convos.metrics.codegen.core.CoreEnumType
+import org.convos.metrics.codegen.core.CoreMetricsModel
+import org.convos.metrics.codegen.core.UserPropertiesDescriptor
 import org.convos.metrics.codegen.navigation.NavigationGraph
 import org.convos.metrics.codegen.navigation.NavigationMethodType
 import org.convos.metrics.codegen.navigation.NavigationTargetDescriptor
@@ -9,11 +13,16 @@ import org.convos.metrics.codegen.navigation.NavigationTargetDescriptor
 class SwiftGenerator(
     private val codeGenerator: CodeGenerator,
 ) {
-    fun generate(graph: NavigationGraph) {
+    fun generate(graph: NavigationGraph, coreModel: CoreMetricsModel) {
         generatePackageManifest()
         generateCollectorDelegate()
-        generateNavigationTargets(graph)
-        generateCollectors(graph)
+        if (graph.targets.isNotEmpty()) {
+            generateNavigationTargets(graph)
+            generateCollectors(graph)
+        }
+        if (!coreModel.isEmpty) {
+            generateCore(coreModel)
+        }
     }
 
     private fun generatePackageManifest() {
@@ -23,12 +32,12 @@ class SwiftGenerator(
             appendLine("import PackageDescription")
             appendLine()
             appendLine("let package = Package(")
-            appendLine("    name: \"NavigationMetrics\",")
+            appendLine("    name: \"$LIBRARY_NAME\",")
             appendLine("    products: [")
-            appendLine("        .library(name: \"NavigationMetrics\", targets: [\"NavigationMetrics\"]),")
+            appendLine("        .library(name: \"$LIBRARY_NAME\", targets: [\"$LIBRARY_NAME\"]),")
             appendLine("    ],")
             appendLine("    targets: [")
-            appendLine("        .target(name: \"NavigationMetrics\"),")
+            appendLine("        .target(name: \"$LIBRARY_NAME\"),")
             appendLine("    ]")
             appendLine(")")
         }
@@ -52,6 +61,10 @@ class SwiftGenerator(
             appendLine("    open func navigatedTo(source: String, target: String) {}")
             appendLine("    open func presented(source: String, target: String) {}")
             appendLine("    open func closed(screen: String, context: ScreenContext) {}")
+            appendLine()
+            appendLine("    open func identify(userId: String) {}")
+            appendLine("    open func updateUserProperties(properties: [String: Any?]) {}")
+            appendLine("    open func sendEvent(name: String, properties: [String: Any?]) {}")
             appendLine("}")
             appendLine()
         }
@@ -61,7 +74,6 @@ class SwiftGenerator(
 
     private fun generateNavigationTargets(graph: NavigationGraph) {
         val code = buildString {
-            // Enums
             for (enumType in graph.enumTypes) {
                 appendLine("public enum ${enumType.name} {")
                 for (value in enumType.values) {
@@ -71,13 +83,11 @@ class SwiftGenerator(
                 appendLine()
             }
 
-            // Args structs
             for (descriptor in graph.targets.values) {
                 generateArgsStruct(this, descriptor)
                 appendLine()
             }
 
-            // Protocols
             for (descriptor in graph.targets.values) {
                 generateProtocol(this, descriptor)
                 appendLine()
@@ -194,6 +204,192 @@ class SwiftGenerator(
         sb.appendLine("}")
     }
 
+    private fun generateCore(model: CoreMetricsModel) {
+        if (model.enumTypes.isNotEmpty()) {
+            generateCoreEnums(model.enumTypes)
+        }
+        model.userProperties?.let { generateUserPropertiesStruct(it) }
+        model.coreActions?.let {
+            generateCoreActionsProtocol(it)
+            generateMetricsCoreActions(it)
+        }
+        generateCoreMetrics(model)
+    }
+
+    private fun generateCoreEnums(enumTypes: List<CoreEnumType>) {
+        val code = buildString {
+            for ((index, enumType) in enumTypes.withIndex()) {
+                if (index > 0) appendLine()
+                appendLine("public enum ${enumType.name} {")
+                for (value in enumType.values) {
+                    appendLine("    case ${value.name.toSwiftEnumCase()}")
+                }
+                appendLine("}")
+                appendLine()
+                appendLine("extension ${enumType.name} {")
+                appendLine("    public var metricsString: String {")
+                appendLine("        switch self {")
+                for (value in enumType.values) {
+                    appendLine("        case .${value.name.toSwiftEnumCase()}: return \"${value.snakeName}\"")
+                }
+                appendLine("        }")
+                appendLine("    }")
+                appendLine("}")
+            }
+        }
+
+        writeSwiftFile(SOURCES_PACKAGE, "CoreEnums", code)
+    }
+
+    private fun generateUserPropertiesStruct(descriptor: UserPropertiesDescriptor) {
+        val code = buildString {
+            appendLine("public struct ${descriptor.name} {")
+            for (p in descriptor.properties) {
+                val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                val typeStr = if (p.nullable) "$swiftType?" else swiftType
+                appendLine("    public let ${p.name}: $typeStr")
+            }
+            if (descriptor.properties.isNotEmpty()) {
+                appendLine()
+                val initParams = descriptor.properties.joinToString(", ") { p ->
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val typeStr = if (p.nullable) "$swiftType?" else swiftType
+                    val default = if (p.nullable) " = nil" else ""
+                    "${p.name}: $typeStr$default"
+                }
+                appendLine("    public init($initParams) {")
+                for (p in descriptor.properties) {
+                    appendLine("        self.${p.name} = ${p.name}")
+                }
+                appendLine("    }")
+            } else {
+                appendLine("    public init() {}")
+            }
+            appendLine("}")
+        }
+
+        writeSwiftFile(SOURCES_PACKAGE, descriptor.name, code)
+    }
+
+    private fun generateCoreActionsProtocol(descriptor: CoreActionsDescriptor) {
+        val code = buildString {
+            appendLine("public protocol ${descriptor.name}: AnyObject {")
+            for (action in descriptor.actions) {
+                val params = action.parameters.joinToString(", ") { p ->
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val typeStr = if (p.nullable) "$swiftType?" else swiftType
+                    "${p.name}: $typeStr"
+                }
+                val asyncKw = if (action.isSuspend) " async" else ""
+                appendLine("    func ${action.name}($params)$asyncKw")
+            }
+            appendLine("}")
+        }
+
+        writeSwiftFile(SOURCES_PACKAGE, descriptor.name, code)
+    }
+
+    private fun generateMetricsCoreActions(descriptor: CoreActionsDescriptor) {
+        val code = buildString {
+            appendLine("public class MetricsCoreActions: ${descriptor.name} {")
+            appendLine("    private weak var delegate: CollectorDelegate?")
+            appendLine()
+            appendLine("    public init(delegate: CollectorDelegate) {")
+            appendLine("        self.delegate = delegate")
+            appendLine("    }")
+
+            for (action in descriptor.actions) {
+                val params = action.parameters.joinToString(", ") { p ->
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val typeStr = if (p.nullable) "$swiftType?" else swiftType
+                    "${p.name}: $typeStr"
+                }
+                val asyncKw = if (action.isSuspend) " async" else ""
+                appendLine()
+                appendLine("    public func ${action.name}($params)$asyncKw {")
+                if (action.parameters.isEmpty()) {
+                    appendLine("        delegate?.sendEvent(name: Self.${eventConstantName(action.eventName)}, properties: [:])")
+                } else {
+                    appendLine("        delegate?.sendEvent(name: Self.${eventConstantName(action.eventName)}, properties: [")
+                    for (p in action.parameters) {
+                        val valueExpr = if (p.isEnum) {
+                            if (p.nullable) "${p.name}?.metricsString" else "${p.name}.metricsString"
+                        } else {
+                            p.name
+                        }
+                        appendLine("            Self.${paramConstantName(p.snakeName)}: $valueExpr,")
+                    }
+                    appendLine("        ])")
+                }
+                appendLine("    }")
+            }
+
+            appendLine()
+            for (action in descriptor.actions) {
+                appendLine("    public static let ${eventConstantName(action.eventName)} = \"${action.eventName}\"")
+            }
+            val uniqueParams = descriptor.actions
+                .flatMap { it.parameters }
+                .distinctBy { it.snakeName }
+            for (p in uniqueParams) {
+                appendLine("    public static let ${paramConstantName(p.snakeName)} = \"${p.snakeName}\"")
+            }
+            appendLine("}")
+        }
+
+        writeSwiftFile(SOURCES_PACKAGE, "MetricsCoreActions", code)
+    }
+
+    private fun generateCoreMetrics(model: CoreMetricsModel) {
+        val userProps = model.userProperties
+        val coreActions = model.coreActions
+
+        val code = buildString {
+            appendLine("public class CoreMetrics {")
+            if (coreActions != null) {
+                appendLine("    public let actions: ${coreActions.name}")
+            }
+            appendLine("    private weak var delegate: CollectorDelegate?")
+            appendLine()
+            appendLine("    public init(delegate: CollectorDelegate) {")
+            appendLine("        self.delegate = delegate")
+            if (coreActions != null) {
+                appendLine("        self.actions = MetricsCoreActions(delegate: delegate)")
+            }
+            appendLine("    }")
+            appendLine()
+            appendLine("    public func identify(userId: String) {")
+            appendLine("        delegate?.identify(userId: userId)")
+            appendLine("    }")
+
+            if (userProps != null) {
+                appendLine()
+                appendLine("    public func updateUserProperties(properties: ${userProps.name}) async {")
+                if (userProps.properties.isEmpty()) {
+                    appendLine("        delegate?.updateUserProperties(properties: [:])")
+                } else {
+                    appendLine("        delegate?.updateUserProperties(properties: [")
+                    for (p in userProps.properties) {
+                        appendLine("            Self.${userPropertyConstantName(p.snakeName)}: properties.${p.name},")
+                    }
+                    appendLine("        ])")
+                }
+                appendLine("    }")
+            }
+
+            if (userProps != null && userProps.properties.isNotEmpty()) {
+                appendLine()
+                for (p in userProps.properties) {
+                    appendLine("    public static let ${userPropertyConstantName(p.snakeName)} = \"${p.snakeName}\"")
+                }
+            }
+
+            appendLine("}")
+        }
+
+        writeSwiftFile(SOURCES_PACKAGE, "CoreMetrics", code)
+    }
+
     private fun writeSwiftFile(packageName: String, fileName: String, content: String) {
         codeGenerator.createNewFile(
             dependencies = Dependencies(aggregating = true),
@@ -204,7 +400,22 @@ class SwiftGenerator(
     }
 
     companion object {
-        private const val SOURCES_PACKAGE = "swift.Sources.NavigationMetrics"
+        private const val LIBRARY_NAME = "ConvosMetrics"
+        private const val SOURCES_PACKAGE = "swift.Sources.$LIBRARY_NAME"
+
+        private fun eventConstantName(snakeEvent: String): String =
+            "event${snakeEvent.snakeToUpperCamel()}"
+
+        private fun paramConstantName(snakeParam: String): String =
+            "param${snakeParam.snakeToUpperCamel()}"
+
+        private fun userPropertyConstantName(snakeProperty: String): String =
+            "userProperty${snakeProperty.snakeToUpperCamel()}"
+
+        private fun String.snakeToUpperCamel(): String =
+            split("_")
+                .filter { it.isNotEmpty() }
+                .joinToString("") { it.replaceFirstChar { c -> c.uppercase() } }
 
         private fun kotlinTypeToSwift(type: String, qualifiedType: String): String {
             return when (qualifiedType) {
