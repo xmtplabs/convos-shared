@@ -34,6 +34,7 @@ interface CoreActions {
         memberCount: Int,
         attachmentCount: Int,
         hasText: Boolean,
-        hasAssistant: Boolean
+        hasAssistant: Boolean,
+        isSuccess: Boolean
     )
 }
