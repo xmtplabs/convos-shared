@@ -5,7 +5,9 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 import org.convos.metrics.codegen.core.CoreExtractor
+import org.convos.metrics.codegen.graphviz.NavigatorGraphRenderer
 import org.convos.metrics.codegen.kotlin.KotlinGenerator
+import org.convos.metrics.codegen.markdown.MetricsMarkdownWriter
 import org.convos.metrics.codegen.navigation.NavigationExtractor
 import org.convos.metrics.codegen.navigation.NavigationGraphYamlWriter
 import org.convos.metrics.codegen.swift.SwiftGenerator
@@ -16,6 +18,8 @@ class MetricsProcessor(
     private val navigationExtractor = NavigationExtractor(environment.logger)
     private val coreExtractor = CoreExtractor(environment.logger)
     private val yamlWriter = NavigationGraphYamlWriter(environment.codeGenerator)
+    private val markdownWriter = MetricsMarkdownWriter(environment.codeGenerator)
+    private val navigatorGraphRenderer = NavigatorGraphRenderer(environment.codeGenerator)
     private val kotlinGenerator = KotlinGenerator(environment.codeGenerator)
     private val swiftGenerator = SwiftGenerator(environment.codeGenerator)
 
@@ -32,8 +36,13 @@ class MetricsProcessor(
             kotlinGenerator.generateCore(coreModel)
         }
 
+        if (navigationGraph.targets.isNotEmpty()) {
+            navigatorGraphRenderer.render(navigationGraph)
+        }
+
         if (navigationGraph.targets.isNotEmpty() || !coreModel.isEmpty) {
             swiftGenerator.generate(navigationGraph, coreModel)
+            markdownWriter.write(navigationGraph, coreModel)
         }
 
         return emptyList()
