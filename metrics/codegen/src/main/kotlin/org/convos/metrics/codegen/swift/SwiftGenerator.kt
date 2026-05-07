@@ -111,14 +111,14 @@ class SwiftGenerator(
             sb.appendLine("    public init() {}")
         } else {
             for (param in params) {
-                val swiftType = kotlinTypeToSwift(param.type, param.qualifiedType)
+                val swiftType = kotlinTypeToSwift(param.type, param.qualifiedType, null, null)
                 val typeStr = if (param.nullable) "$swiftType?" else swiftType
                 sb.appendLine("    public let ${param.name}: $typeStr")
             }
             sb.appendLine()
 
             val initParams = params.joinToString(", ") { param ->
-                val swiftType = kotlinTypeToSwift(param.type, param.qualifiedType)
+                val swiftType = kotlinTypeToSwift(param.type, param.qualifiedType, null, null)
                 val typeStr = if (param.nullable) "$swiftType?" else swiftType
                 val default = if (param.hasDefault && param.nullable) " = nil" else ""
                 "${param.name}: $typeStr$default"
@@ -247,9 +247,9 @@ class SwiftGenerator(
 
     private fun generateUserPropertiesStruct(descriptor: UserPropertiesDescriptor) {
         val code = buildString {
-            appendLine("public struct ${descriptor.name} {")
+            appendLine("public struct ${descriptor.name}: Sendable {")
             for (p in descriptor.properties) {
-                val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType, p.elementType, p.elementQualifiedType)
                 val typeStr = if (p.nullable) "$swiftType?" else swiftType
                 appendLine("    public let ${p.name}: $typeStr")
             }
@@ -258,7 +258,7 @@ class SwiftGenerator(
                 appendLine("    public init(")
                 val lastIndex = descriptor.properties.size - 1
                 for ((index, p) in descriptor.properties.withIndex()) {
-                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType, p.elementType, p.elementQualifiedType)
                     val typeStr = if (p.nullable) "$swiftType?" else swiftType
                     val default = if (p.nullable) " = nil" else ""
                     val comma = if (index < lastIndex) "," else ""
@@ -280,10 +280,10 @@ class SwiftGenerator(
 
     private fun generateCoreActionsProtocol(descriptor: CoreActionsDescriptor) {
         val code = buildString {
-            appendLine("public protocol ${descriptor.name}: AnyObject {")
+            appendLine("public protocol ${descriptor.name}: AnyObject, Sendable {")
             for (action in descriptor.actions) {
                 val params = action.parameters.joinToString(", ") { p ->
-                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType, p.elementType, p.elementQualifiedType)
                     val typeStr = if (p.nullable) "$swiftType?" else swiftType
                     "${p.name}: $typeStr"
                 }
@@ -298,7 +298,7 @@ class SwiftGenerator(
 
     private fun generateMetricsCoreActions(descriptor: CoreActionsDescriptor) {
         val code = buildString {
-            appendLine("public class MetricsCoreActions: ${descriptor.name} {")
+            appendLine("public final class MetricsCoreActions: ${descriptor.name}, @unchecked Sendable {")
             appendLine("    private weak var delegate: CollectorDelegate?")
             appendLine()
             appendLine("    public init(delegate: CollectorDelegate) {")
@@ -307,7 +307,7 @@ class SwiftGenerator(
 
             for (action in descriptor.actions) {
                 val params = action.parameters.joinToString(", ") { p ->
-                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
+                    val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType, p.elementType, p.elementQualifiedType)
                     val typeStr = if (p.nullable) "$swiftType?" else swiftType
                     "${p.name}: $typeStr"
                 }
@@ -352,7 +352,7 @@ class SwiftGenerator(
         val coreActions = model.coreActions
 
         val code = buildString {
-            appendLine("public class CoreMetrics {")
+            appendLine("public final class CoreMetrics: @unchecked Sendable {")
             if (coreActions != null) {
                 appendLine("    public let actions: ${coreActions.name}")
             }
@@ -425,7 +425,12 @@ class SwiftGenerator(
                 .filter { it.isNotEmpty() }
                 .joinToString("") { it.replaceFirstChar { c -> c.uppercase() } }
 
-        private fun kotlinTypeToSwift(type: String, qualifiedType: String): String {
+        private fun kotlinTypeToSwift(
+            type: String,
+            qualifiedType: String,
+            elementType: String?,
+            elementQualifiedType: String?,
+        ): String {
             return when (qualifiedType) {
                 "kotlin.String" -> "String"
                 "kotlin.Int" -> "Int"
@@ -433,6 +438,14 @@ class SwiftGenerator(
                 "kotlin.Boolean" -> "Bool"
                 "kotlin.Double" -> "Double"
                 "kotlin.Float" -> "Float"
+                "kotlin.collections.List" -> {
+                    val element = if (elementType != null && elementQualifiedType != null) {
+                        kotlinTypeToSwift(elementType, elementQualifiedType, null, null)
+                    } else {
+                        "Any"
+                    }
+                    "[$element]"
+                }
                 else -> type
             }
         }

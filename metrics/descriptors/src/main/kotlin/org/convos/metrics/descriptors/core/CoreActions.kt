@@ -32,7 +32,7 @@ interface CoreActions {
     suspend fun sentMessage(
         sendingTime: Float,
         memberCount: Int,
-        attachmentCount: Int,
+        attachmentTypes: List<String>,
         hasText: Boolean,
         hasAssistant: Boolean,
         isSuccess: Boolean

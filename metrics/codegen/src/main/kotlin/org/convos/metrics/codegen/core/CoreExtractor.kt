@@ -114,6 +114,17 @@ class CoreExtractor(private val logger: KSPLogger) {
             }
         }
 
+        var elementType: String? = null
+        var elementQualifiedType: String? = null
+        if (decl.qualifiedName?.asString() == "kotlin.collections.List") {
+            val arg = type.arguments.firstOrNull()?.type?.resolve()
+            val argDecl = arg?.declaration
+            if (argDecl != null) {
+                elementType = argDecl.simpleName.asString()
+                elementQualifiedType = argDecl.qualifiedName?.asString() ?: ""
+            }
+        }
+
         return CoreProperty(
             name = paramName,
             snakeName = paramName.toSnakeCase(),
@@ -121,6 +132,8 @@ class CoreExtractor(private val logger: KSPLogger) {
             qualifiedType = decl.qualifiedName?.asString() ?: "",
             nullable = type.isMarkedNullable,
             isEnum = isEnum,
+            elementType = elementType,
+            elementQualifiedType = elementQualifiedType,
         )
     }
 

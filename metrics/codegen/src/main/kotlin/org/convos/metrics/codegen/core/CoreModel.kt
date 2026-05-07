@@ -23,6 +23,8 @@ data class CoreProperty(
     val qualifiedType: String,
     val nullable: Boolean,
     val isEnum: Boolean = false,
+    val elementType: String? = null,
+    val elementQualifiedType: String? = null,
 )
 
 @Serializable

@@ -58,7 +58,12 @@ class KotlinGenerator(
 
             for (action in descriptor.actions) {
                 val params = action.parameters.joinToString(", ") { p ->
-                    "${p.name}: ${p.type}${if (p.nullable) "?" else ""}"
+                    val baseType = if (p.qualifiedType == "kotlin.collections.List" && p.elementType != null) {
+                        "List<${p.elementType}>"
+                    } else {
+                        p.type
+                    }
+                    "${p.name}: $baseType${if (p.nullable) "?" else ""}"
                 }
                 val suspendKw = if (action.isSuspend) "suspend " else ""
                 appendLine()
