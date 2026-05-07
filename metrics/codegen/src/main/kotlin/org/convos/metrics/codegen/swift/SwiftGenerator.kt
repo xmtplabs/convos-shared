@@ -200,7 +200,7 @@ class SwiftGenerator(
         }
 
         sb.appendLine()
-        sb.appendLine("    public static let name = \"${descriptor.metricsName}\"")
+        sb.appendLine("    public static let name: String = \"${descriptor.metricsName}\"")
         sb.appendLine("}")
     }
 
@@ -251,13 +251,16 @@ class SwiftGenerator(
             }
             if (descriptor.properties.isNotEmpty()) {
                 appendLine()
-                val initParams = descriptor.properties.joinToString(", ") { p ->
+                appendLine("    public init(")
+                val lastIndex = descriptor.properties.size - 1
+                for ((index, p) in descriptor.properties.withIndex()) {
                     val swiftType = kotlinTypeToSwift(p.type, p.qualifiedType)
                     val typeStr = if (p.nullable) "$swiftType?" else swiftType
                     val default = if (p.nullable) " = nil" else ""
-                    "${p.name}: $typeStr$default"
+                    val comma = if (index < lastIndex) "," else ""
+                    appendLine("        ${p.name}: $typeStr$default$comma")
                 }
-                appendLine("    public init($initParams) {")
+                appendLine("    ) {")
                 for (p in descriptor.properties) {
                     appendLine("        self.${p.name} = ${p.name}")
                 }
@@ -326,13 +329,13 @@ class SwiftGenerator(
 
             appendLine()
             for (action in descriptor.actions) {
-                appendLine("    public static let ${eventConstantName(action.eventName)} = \"${action.eventName}\"")
+                appendLine("    public static let ${eventConstantName(action.eventName)}: String = \"${action.eventName}\"")
             }
             val uniqueParams = descriptor.actions
                 .flatMap { it.parameters }
                 .distinctBy { it.snakeName }
             for (p in uniqueParams) {
-                appendLine("    public static let ${paramConstantName(p.snakeName)} = \"${p.snakeName}\"")
+                appendLine("    public static let ${paramConstantName(p.snakeName)}: String = \"${p.snakeName}\"")
             }
             appendLine("}")
         }
@@ -380,7 +383,7 @@ class SwiftGenerator(
             if (userProps != null && userProps.properties.isNotEmpty()) {
                 appendLine()
                 for (p in userProps.properties) {
-                    appendLine("    public static let ${userPropertyConstantName(p.snakeName)} = \"${p.snakeName}\"")
+                    appendLine("    public static let ${userPropertyConstantName(p.snakeName)}: String = \"${p.snakeName}\"")
                 }
             }
 
@@ -391,12 +394,13 @@ class SwiftGenerator(
     }
 
     private fun writeSwiftFile(packageName: String, fileName: String, content: String) {
+        val normalized = content.trimEnd('\n') + "\n"
         codeGenerator.createNewFile(
             dependencies = Dependencies(aggregating = true),
             packageName = packageName,
             fileName = fileName,
             extensionName = "swift",
-        ).bufferedWriter().use { it.write(content) }
+        ).bufferedWriter().use { it.write(normalized) }
     }
 
     companion object {
