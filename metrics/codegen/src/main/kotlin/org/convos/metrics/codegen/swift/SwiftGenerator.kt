@@ -16,6 +16,7 @@ class SwiftGenerator(
     fun generate(graph: NavigationGraph, coreModel: CoreMetricsModel) {
         generatePackageManifest()
         generateCollectorDelegate()
+        copySwiftResource("/swift/MetricsStableIdEncoder.swift", "MetricsStableIdEncoder")
         if (graph.targets.isNotEmpty()) {
             generateNavigationTargets(graph)
             generateCollectors(graph)
@@ -352,21 +353,25 @@ class SwiftGenerator(
         val coreActions = model.coreActions
 
         val code = buildString {
+            appendLine("import Foundation")
+            appendLine()
             appendLine("public final class CoreMetrics: @unchecked Sendable {")
             if (coreActions != null) {
                 appendLine("    public let actions: ${coreActions.name}")
             }
             appendLine("    private weak var delegate: CollectorDelegate?")
+            appendLine("    private let stableId: MetricsStableIdEncoder")
             appendLine()
-            appendLine("    public init(delegate: CollectorDelegate) {")
+            appendLine("    public init(delegate: CollectorDelegate, stableId: MetricsStableIdEncoder) {")
             appendLine("        self.delegate = delegate")
+            appendLine("        self.stableId = stableId")
             if (coreActions != null) {
                 appendLine("        self.actions = MetricsCoreActions(delegate: delegate)")
             }
             appendLine("    }")
             appendLine()
-            appendLine("    public func identify(userId: String) {")
-            appendLine("        delegate?.identify(userId: userId)")
+            appendLine("    public func identify(privateKey: Data) {")
+            appendLine("        delegate?.identify(userId: stableId.derive(privateKey: privateKey))")
             appendLine("    }")
 
             if (userProps != null) {
@@ -405,6 +410,12 @@ class SwiftGenerator(
             fileName = fileName,
             extensionName = "swift",
         ).bufferedWriter().use { it.write(normalized) }
+    }
+
+    private fun copySwiftResource(resourcePath: String, fileName: String) {
+        val content = javaClass.getResourceAsStream(resourcePath)?.bufferedReader()?.use { it.readText() }
+            ?: error("Missing Swift resource: $resourcePath")
+        writeSwiftFile(SOURCES_PACKAGE, fileName, content)
     }
 
     companion object {

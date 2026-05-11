@@ -118,9 +118,11 @@ class KotlinGenerator(
             appendLine("package $packageName")
             appendLine()
             appendLine("import $COLLECTOR_DELEGATE_FQN")
+            appendLine("import $METRICS_STABLE_ID_FQN")
             appendLine()
             appendLine("class CoreMetrics(")
             appendLine("    private val delegate: CollectorDelegate,")
+            appendLine("    private val stableId: MetricsStableIdEncoder,")
             appendLine(") {")
 
             if (coreActions != null) {
@@ -128,8 +130,8 @@ class KotlinGenerator(
                 appendLine()
             }
 
-            appendLine("    fun identify(userId: String) {")
-            appendLine("        delegate.identify(userId)")
+            appendLine("    fun identify(privateKey: ByteArray) {")
+            appendLine("        delegate.identify(stableId.derive(privateKey))")
             appendLine("    }")
 
             if (userProps != null) {
@@ -180,6 +182,8 @@ class KotlinGenerator(
     companion object {
         private const val COLLECTOR_DELEGATE_FQN =
             "org.convos.metrics.descriptors.navigation.CollectorDelegate"
+        private const val METRICS_STABLE_ID_FQN =
+            "org.convos.metrics.descriptors.MetricsStableIdEncoder"
     }
 
     private fun generateCollector(descriptor: NavigationTargetDescriptor) {
