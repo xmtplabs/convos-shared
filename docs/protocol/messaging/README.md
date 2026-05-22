@@ -4,11 +4,23 @@ This directory is the wire-format reference for every **Convos-specific** XMTP
 content codec that ships in the iOS client. It is the spec port-implementers
 (Android, server agents, integrations, devtools) should read from.
 
-The generic XMTP codecs (`Text`, `Reply`, `Reaction`, `ReactionV2`, `Attachment`,
-`RemoteAttachment`, `MultiRemoteAttachment`, `GroupUpdated`, `ReadReceipt`) are
-**out of scope** — those are defined and documented by the XMTP project and
-are imported as-is from `XMTPiOS`. The docs here cover only the codecs Convos
-defines on top of XMTP, all under the `convos.org` authority.
+Two flavours of "Convos-specific" protocol are documented here:
+
+1. **XMTP-registered codecs under the `convos.org` authority** — full
+   `ContentCodec` implementations with their own `ContentTypeID`. There are
+   14 of these (see [Codec index](#codec-index)).
+2. **Attachment encodings layered over standard XMTP codecs** — conventions
+   on top of XMTP's `RemoteAttachmentCodec` (and friends) that pick mimeTypes,
+   filename patterns, file formats, and which metadata fields the sender
+   populates. The wire format is XMTP-standard; what's Convos-specific is the
+   contract around how the bytes are produced and what extra metadata lives
+   only on the sender's device. There are 4 of these (see
+   [Attachment encodings](#attachment-encodings)).
+
+The generic XMTP codecs themselves (`Text`, `Reply`, `Reaction`, `ReactionV2`,
+`Attachment`, `RemoteAttachment`, `MultiRemoteAttachment`, `GroupUpdated`,
+`ReadReceipt`) are **out of scope** — those are defined and documented by
+the XMTP project and are imported as-is from `XMTPiOS`.
 
 ## Shared concepts
 
@@ -115,6 +127,43 @@ same number appears on each per-codec doc.
 | 12 | 2026‑05‑09 | `convos.org/connection_payload:1.0` | [codec-012-connection-payload.md](./codec-012-connection-payload.md) | Device ➜ agent telemetry envelope (Health, Calendar, Contacts, etc.) |
 | 13 | 2026‑05‑09 | `convos.org/connection_invocation:1.0` | [codec-013-connection-invocation.md](./codec-013-connection-invocation.md) | Agent ➜ device action invocation (write request against a `DataSink`) |
 | 14 | 2026‑05‑09 | `convos.org/connection_invocation_result:1.0` | [codec-014-connection-invocation-result.md](./codec-014-connection-invocation-result.md) | Device ➜ agent reply to an invocation |
+
+## Attachment encodings
+
+These are *not* XMTP-registered codecs — they ride on the XMTP-standard
+`RemoteAttachmentCodec` (`xmtp.org/remoteStaticAttachment:1.0`). The
+"protocol" lives in the conventions around mimeType, filename, file
+format, and which `StoredRemoteAttachment` fields the sender populates
+(most of those fields do **not** travel over the wire; the receiver
+re-derives a stripped `StoredRemoteAttachment` from the wire
+`RemoteAttachment` plus a mimeType inferred from the filename extension).
+
+Numbered separately from the XMTP-registered codecs above. Same
+oldest-first rule: `#1` is the oldest send path in the iOS repo.
+
+| # | First added | MIME type | Filename pattern | Doc | Purpose |
+|---|---|---|---|---|---|
+| 1 | 2026‑02‑14 | `image/jpeg` | `photo_<ts>_<uuid>.jpg` | [attachment-001-image.md](./attachment-001-image.md) | Still images (JPEG) |
+| 2 | 2026‑04‑03 | `video/mp4` | `video_<ts>_<uuid>.mp4` | [attachment-002-video.md](./attachment-002-video.md) | H.264 mp4 video clips |
+| 3 | 2026‑04‑06 | `audio/m4a` | `voice_memo_<ts>_<uuid>.m4a` | [attachment-003-voice-memo.md](./attachment-003-voice-memo.md) | AAC voice recordings (with locally-computed waveform) |
+| 4 | 2026‑05‑03 | *caller-supplied* | *caller-supplied* | [attachment-004-file.md](./attachment-004-file.md) | Arbitrary files (PDF, Markdown, etc.) |
+
+### What travels vs. what's local-only
+
+A short reference applicable to **all** attachment encodings:
+
+| Field | On the wire? | Notes |
+|---|---|---|
+| `url`, `contentDigest`, `secret`, `salt`, `nonce` | yes | XMTP-standard `RemoteAttachment` fields |
+| `filename` | yes | Sender chooses; receiver discriminates by its extension |
+| `mimeType` | no — **inferred by receiver** from filename extension | `UTType(filenameExtension:)` in `DecodedMessage+DBRepresentation.handleRemoteAttachmentContent` |
+| `mediaWidth`, `mediaHeight`, `mediaDuration`, `thumbnailDataBase64` | **no** — populated only on the sender's local DB | Receivers see `nil` until they download and inspect the payload themselves |
+| `waveformLevels` (voice memos) | **no** — local-only sidecar in `AttachmentLocalState` | Sender records live from `AVAudioRecorder`; receiver re-computes via `VoiceMemoWaveformAnalyzer` after download |
+
+If you're porting Convos to another platform, the wire contract is just the
+XMTP `RemoteAttachment` + a filename with the conventional extension. The
+sender-only fields are quality-of-life metadata for the device that authored
+the message; they are not part of the protocol contract.
 
 ## How to use this reference
 
