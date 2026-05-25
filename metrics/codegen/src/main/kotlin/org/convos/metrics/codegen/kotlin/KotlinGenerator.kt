@@ -43,6 +43,14 @@ class KotlinGenerator(
             appendLine("package $packageName")
             appendLine()
             appendLine("import $COLLECTOR_DELEGATE_FQN")
+            val crossPackageEnums = referencedEnums.filter { enumType ->
+                enumType.qualifiedName.isNotEmpty() &&
+                    enumType.qualifiedName != enumType.name &&
+                    enumType.qualifiedName.substringBeforeLast('.') != packageName
+            }
+            for (enumType in crossPackageEnums.sortedBy { it.qualifiedName }) {
+                appendLine("import ${enumType.qualifiedName}")
+            }
             appendLine()
             for (enumType in referencedEnums) {
                 appendLine("private fun ${enumType.name}.metricsString(): String = when (this) {")

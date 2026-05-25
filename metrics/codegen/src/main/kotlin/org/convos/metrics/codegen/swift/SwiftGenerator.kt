@@ -22,7 +22,8 @@ class SwiftGenerator(
             generateCollectors(graph)
         }
         if (!coreModel.isEmpty) {
-            generateCore(coreModel)
+            val navigationEnumNames = graph.enumTypes.map { it.name }.toSet()
+            generateCore(coreModel, navigationEnumNames)
         }
     }
 
@@ -209,9 +210,9 @@ class SwiftGenerator(
         sb.appendLine("}")
     }
 
-    private fun generateCore(model: CoreMetricsModel) {
+    private fun generateCore(model: CoreMetricsModel, navigationEnumNames: Set<String>) {
         if (model.enumTypes.isNotEmpty()) {
-            generateCoreEnums(model.enumTypes)
+            generateCoreEnums(model.enumTypes, navigationEnumNames)
         }
         model.userProperties?.let { generateUserPropertiesStruct(it) }
         model.coreActions?.let {
@@ -221,16 +222,19 @@ class SwiftGenerator(
         generateCoreMetrics(model)
     }
 
-    private fun generateCoreEnums(enumTypes: List<CoreEnumType>) {
+    private fun generateCoreEnums(enumTypes: List<CoreEnumType>, navigationEnumNames: Set<String>) {
         val code = buildString {
             for ((index, enumType) in enumTypes.withIndex()) {
                 if (index > 0) appendLine()
-                appendLine("public enum ${enumType.name} {")
-                for (value in enumType.values) {
-                    appendLine("    case ${value.name.toSwiftEnumCase()}")
+                val alreadyDeclared = enumType.name in navigationEnumNames
+                if (!alreadyDeclared) {
+                    appendLine("public enum ${enumType.name} {")
+                    for (value in enumType.values) {
+                        appendLine("    case ${value.name.toSwiftEnumCase()}")
+                    }
+                    appendLine("}")
+                    appendLine()
                 }
-                appendLine("}")
-                appendLine()
                 appendLine("extension ${enumType.name} {")
                 appendLine("    public var metricsString: String {")
                 appendLine("        switch self {")

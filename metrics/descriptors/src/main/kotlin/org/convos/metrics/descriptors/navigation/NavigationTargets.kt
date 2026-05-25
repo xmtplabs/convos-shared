@@ -23,6 +23,7 @@ interface ConversationsNavigator {
 interface ConversationNavigator {
     data class Args(val conversationId: String)
 
+    fun present(paywall: PaywallNavigator.Args)
     fun present(conversationInfo: ConversationInfoNavigator.Args)
     fun present(myInfo: MyInfoNavigator.Args)
     fun present(memberProfile: MemberProfileNavigator.Args)
@@ -59,6 +60,7 @@ interface AppSettingsNavigator {
     fun navigateTo(connections: ConnectionsNavigator.Args)
     fun navigateTo(backupRestore: BackupRestoreNavigator.Args)
     fun navigateTo(deleteAllData: DeleteAllDataNavigator.Args)
+    fun navigateTo(subscriptionSettings: SubscriptionSettingsNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -346,4 +348,40 @@ interface LockConvoConfirmationNavigator {
     data class Args(val conversationId: String)
 
     fun closed(context: ScreenContext)
+}
+
+// Paywall & Billing
+
+@NavigationTarget
+interface PaywallNavigator {
+    data class Args(val source: PaywallSource)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface SubscriptionSettingsNavigator {
+    class Args
+
+    fun present(paywall: PaywallNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface BillingDebugNavigator {
+    class Args
+
+    fun present(paywall: PaywallNavigator.Args)
+    fun navigateTo(subscriptionSettings: SubscriptionSettingsNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+enum class PaywallSource {
+    SETTINGS,
+    LOW_BALANCE_BANNER,
+    ONBOARDING,
+    MEMBER_CARD,
+    DEBUG,
 }
