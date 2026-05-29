@@ -20,6 +20,8 @@ echo "[pre-commit] Running metrics build (regenerates Swift package + README)...
 generated_paths=(
     "ConvosMetrics"
     "README.md"
+    "navigators.dot"
+    "navigators.png"
 )
 
 unstaged="$(git diff --name-only -- "${generated_paths[@]}")"

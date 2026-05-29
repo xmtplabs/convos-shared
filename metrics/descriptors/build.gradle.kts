@@ -18,8 +18,11 @@ val repoRoot: java.io.File = rootProject.projectDir.parentFile
 val generatedSwiftDir = layout.buildDirectory.dir("generated/ksp/main/resources/swift")
 val generatedManifestFile = layout.buildDirectory.file("generated/ksp/main/resources/swiftpackage/Package.swift")
 val generatedMetricsMd = layout.buildDirectory.file("generated/ksp/main/resources/metrics.md")
+val generatedNavigatorsDot = layout.buildDirectory.file("generated/ksp/main/resources/navigators.dot")
 val swiftPackageOutDir = repoRoot.resolve("ConvosMetrics")
 val readmeFile = repoRoot.resolve("README.md")
+val navigatorsDotOut = repoRoot.resolve("navigators.dot")
+val navigatorsPngOut = repoRoot.resolve("navigators.png")
 
 val syncSwiftPackage = tasks.register<Sync>("syncSwiftPackage") {
     group = "convos"
@@ -81,10 +84,42 @@ val syncReadmeMetrics = tasks.register("syncReadmeMetrics") {
     }
 }
 
+val syncNavigatorsGraph = tasks.register("syncNavigatorsGraph") {
+    group = "convos"
+    description = "Mirrors the generated navigators.dot to <repoRoot> and, when Graphviz is installed, renders navigators.png for the README."
+    dependsOn("kspKotlin")
+    val dotProvider = generatedNavigatorsDot
+    val dotOut = navigatorsDotOut
+    val pngOut = navigatorsPngOut
+    inputs.file(dotProvider)
+    outputs.file(dotOut)
+    doLast {
+        dotOut.writeText(dotProvider.get().asFile.readText())
+
+        val graphvizAvailable = try {
+            ProcessBuilder("dot", "-V").redirectErrorStream(true).start().waitFor() == 0
+        } catch (_: Exception) {
+            false
+        }
+        if (!graphvizAvailable) {
+            logger.warn(
+                "[convos] Graphviz 'dot' not found on PATH; skipping navigators.png render. " +
+                    "Install Graphviz (e.g. 'brew install graphviz') to refresh the diagram."
+            )
+            return@doLast
+        }
+        val render = ProcessBuilder(
+            "dot", "-Tpng", dotOut.absolutePath, "-o", pngOut.absolutePath
+        ).redirectErrorStream(true).start()
+        val output = render.inputStream.bufferedReader().readText()
+        check(render.waitFor() == 0) { "Graphviz render failed:\n$output" }
+    }
+}
+
 tasks.register("syncGeneratedArtifacts") {
     group = "convos"
-    description = "Runs all generated-artifact sync steps (Swift package + README)."
-    dependsOn(syncSwiftPackage, syncSwiftManifest, syncReadmeMetrics)
+    description = "Runs all generated-artifact sync steps (Swift package + README + navigator graph)."
+    dependsOn(syncSwiftPackage, syncSwiftManifest, syncReadmeMetrics, syncNavigatorsGraph)
 }
 
 tasks.named("build") {

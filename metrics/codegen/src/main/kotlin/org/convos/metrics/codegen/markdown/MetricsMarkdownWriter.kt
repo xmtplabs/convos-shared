@@ -90,7 +90,9 @@ class MetricsMarkdownWriter(private val codeGenerator: CodeGenerator) {
             appendLine()
             return
         }
-        appendLine("Graph source: [`navigators.dot`](navigators.dot) — render with `dot -Tpng navigators.dot -o navigators.png`.")
+        appendLine("![Navigator graph](navigators.png)")
+        appendLine()
+        appendLine("Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendered by the build when Graphviz is installed.")
         appendLine()
         appendLine("| Screen | Args | Outgoing |")
         appendLine("|--------|------|----------|")
