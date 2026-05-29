@@ -43,12 +43,12 @@ class SwiftGenerator(
             appendLine("        .library(name: \"$LIBRARY_NAME\", targets: [\"$LIBRARY_NAME\"]),")
             appendLine("    ],")
             appendLine("    targets: [")
-            appendLine("        .target(name: \"$LIBRARY_NAME\"),")
+            appendLine("        .target(name: \"$LIBRARY_NAME\", path: \"$SOURCES_PATH\"),")
             appendLine("    ]")
             appendLine(")")
         }
 
-        writeSwiftFile("swift", "Package", code)
+        writeSwiftFile(MANIFEST_PACKAGE, "Package", code)
     }
 
     private fun generateCollectorDelegate() {
@@ -424,7 +424,9 @@ class SwiftGenerator(
 
     companion object {
         private const val LIBRARY_NAME = "ConvosMetrics"
+        private const val MANIFEST_PACKAGE = "swiftpackage"
         private const val SOURCES_PACKAGE = "swift.Sources.$LIBRARY_NAME"
+        private const val SOURCES_PATH = "$LIBRARY_NAME/Sources/$LIBRARY_NAME"
 
         private fun eventConstantName(snakeEvent: String): String =
             "event${snakeEvent.snakeToUpperCamel()}"

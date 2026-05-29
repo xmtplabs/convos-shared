@@ -12,6 +12,6 @@ let package = Package(
         .library(name: "ConvosMetrics", targets: ["ConvosMetrics"]),
     ],
     targets: [
-        .target(name: "ConvosMetrics"),
+        .target(name: "ConvosMetrics", path: "ConvosMetrics/Sources/ConvosMetrics"),
     ]
 )
