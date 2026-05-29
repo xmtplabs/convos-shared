@@ -220,15 +220,77 @@ public struct BackwardsSecrecyInfoNavigatorArgs {
     public init() {}
 }
 
-public struct MaxedOutInfoNavigatorArgs {
-    public init() {}
-}
-
 public struct LockConvoConfirmationNavigatorArgs {
     public let conversationId: String
 
     public init(conversationId: String) {
         self.conversationId = conversationId
+    }
+}
+
+public struct ContactsNavigatorArgs {
+    public init() {}
+}
+
+public struct ContactCardNavigatorArgs {
+    public let inboxId: String
+    public let conversationId: String?
+
+    public init(inboxId: String, conversationId: String? = nil) {
+        self.inboxId = inboxId
+        self.conversationId = conversationId
+    }
+}
+
+public struct AgentTemplateContactCardNavigatorArgs {
+    public let templateId: String
+    public let inboxId: String
+    public let conversationId: String?
+
+    public init(templateId: String, inboxId: String, conversationId: String? = nil) {
+        self.templateId = templateId
+        self.inboxId = inboxId
+        self.conversationId = conversationId
+    }
+}
+
+public struct AddMembersNavigatorArgs {
+    public let conversationId: String
+    public let conversationTitle: String?
+
+    public init(conversationId: String, conversationTitle: String? = nil) {
+        self.conversationId = conversationId
+        self.conversationTitle = conversationTitle
+    }
+}
+
+public struct AgentBuilderNavigatorArgs {
+    public let conversationId: String
+
+    public init(conversationId: String) {
+        self.conversationId = conversationId
+    }
+}
+
+public struct ThinkingDetailNavigatorArgs {
+    public let conversationId: String
+    public let senderInboxId: String
+    public let messageId: String
+
+    public init(conversationId: String, senderInboxId: String, messageId: String) {
+        self.conversationId = conversationId
+        self.senderInboxId = senderInboxId
+        self.messageId = messageId
+    }
+}
+
+public struct HtmlAttachmentPreviewNavigatorArgs {
+    public let conversationId: String?
+    public let senderInboxId: String?
+
+    public init(conversationId: String? = nil, senderInboxId: String? = nil) {
+        self.conversationId = conversationId
+        self.senderInboxId = senderInboxId
     }
 }
 
@@ -256,6 +318,8 @@ public protocol ConversationsNavigator: AnyObject {
     func present(connectionGrant: ConnectionGrantNavigatorArgs)
     func present(explodeInfo: ExplodeInfoNavigatorArgs)
     func present(pinLimitInfo: PinLimitInfoNavigatorArgs)
+    func present(contactCard: ContactCardNavigatorArgs)
+    func present(agentBuilder: AgentBuilderNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -281,6 +345,12 @@ public protocol ConversationNavigator: AnyObject {
     func present(inviteAccepted: InviteAcceptedNavigatorArgs)
     func present(requestPushNotifications: RequestPushNotificationsNavigatorArgs)
     func present(backwardsSecrecyInfo: BackwardsSecrecyInfoNavigatorArgs)
+    func present(addMembers: AddMembersNavigatorArgs)
+    func present(contactCard: ContactCardNavigatorArgs)
+    func present(agentTemplateContactCard: AgentTemplateContactCardNavigatorArgs)
+    func present(agentBuilder: AgentBuilderNavigatorArgs)
+    func present(thinkingDetail: ThinkingDetailNavigatorArgs)
+    func present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -292,10 +362,12 @@ public protocol AppSettingsNavigator: AnyObject {
     func navigateTo(backupRestore: BackupRestoreNavigatorArgs)
     func navigateTo(deleteAllData: DeleteAllDataNavigatorArgs)
     func navigateTo(subscriptionSettings: SubscriptionSettingsNavigatorArgs)
+    func navigateTo(contacts: ContactsNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
 public protocol NewConversationNavigator: AnyObject {
+    func navigateTo(conversation: ConversationNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -307,6 +379,7 @@ public protocol ConversationInfoNavigator: AnyObject {
     func navigateTo(edit: ConversationInfoEditNavigatorArgs)
     func navigateTo(membersList: MembersListNavigatorArgs)
     func navigateTo(filesAndLinks: AssistantFilesLinksNavigatorArgs)
+    func navigateTo(agentTemplateContactCard: AgentTemplateContactCardNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -316,6 +389,7 @@ public protocol ConversationInfoEditNavigator: AnyObject {
 
 public protocol MembersListNavigator: AnyObject {
     func navigateTo(memberProfile: MemberProfileNavigatorArgs)
+    func navigateTo(agentTemplateContactCard: AgentTemplateContactCardNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -332,6 +406,7 @@ public protocol ReactionsNavigator: AnyObject {
 }
 
 public protocol AssistantFilesLinksNavigator: AnyObject {
+    func present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigatorArgs)
     func closed(context: ScreenContext)
 }
 
@@ -435,11 +510,40 @@ public protocol BackwardsSecrecyInfoNavigator: AnyObject {
     func closed(context: ScreenContext)
 }
 
-public protocol MaxedOutInfoNavigator: AnyObject {
+public protocol LockConvoConfirmationNavigator: AnyObject {
     func closed(context: ScreenContext)
 }
 
-public protocol LockConvoConfirmationNavigator: AnyObject {
+public protocol ContactsNavigator: AnyObject {
+    func navigateTo(contactCard: ContactCardNavigatorArgs)
+    func present(newConversation: NewConversationNavigatorArgs)
+    func closed(context: ScreenContext)
+}
+
+public protocol ContactCardNavigator: AnyObject {
+    func navigateTo(contacts: ContactsNavigatorArgs)
+    func closed(context: ScreenContext)
+}
+
+public protocol AgentTemplateContactCardNavigator: AnyObject {
+    func closed(context: ScreenContext)
+}
+
+public protocol AddMembersNavigator: AnyObject {
+    func closed(context: ScreenContext)
+}
+
+public protocol AgentBuilderNavigator: AnyObject {
+    func closed(context: ScreenContext)
+}
+
+public protocol ThinkingDetailNavigator: AnyObject {
+    func closed(context: ScreenContext)
+}
+
+public protocol HtmlAttachmentPreviewNavigator: AnyObject {
+    func navigateTo(contactCard: ContactCardNavigatorArgs)
+    func navigateTo(agentTemplateContactCard: AgentTemplateContactCardNavigatorArgs)
     func closed(context: ScreenContext)
 }
 

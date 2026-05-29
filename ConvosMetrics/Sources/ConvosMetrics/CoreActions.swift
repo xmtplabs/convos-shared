@@ -9,5 +9,4 @@ public protocol CoreActions: AnyObject, Sendable {
     func purchaseCancelled(productId: String, source: PaywallSource) async
     func purchaseFailed(productId: String, source: PaywallSource, reason: PurchaseFailureReason) async
     func purchasesRestored(restoredCount: Int) async
-    func lowBalanceBannerShown(isDepleted: Bool) async
 }

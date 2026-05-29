@@ -85,6 +85,4 @@ interface CoreActions {
     )
 
     suspend fun purchasesRestored(restoredCount: Int)
-
-    suspend fun lowBalanceBannerShown(isDepleted: Boolean)
 }

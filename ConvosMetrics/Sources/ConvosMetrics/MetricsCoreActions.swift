@@ -82,12 +82,6 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
-    public func lowBalanceBannerShown(isDepleted: Bool) async {
-        delegate?.sendEvent(name: Self.eventLowBalanceBannerShown, properties: [
-            Self.paramIsDepleted: isDepleted,
-        ])
-    }
-
     public static let eventStartedConversation: String = "started_conversation"
     public static let eventJoinedConversation: String = "joined_conversation"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
@@ -98,7 +92,6 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventPurchaseCancelled: String = "purchase_cancelled"
     public static let eventPurchaseFailed: String = "purchase_failed"
     public static let eventPurchasesRestored: String = "purchases_restored"
-    public static let eventLowBalanceBannerShown: String = "low_balance_banner_shown"
     public static let paramVerificationDuration: String = "verification_duration"
     public static let paramMemberCount: String = "member_count"
     public static let paramHasAssistant: String = "has_assistant"
@@ -113,5 +106,4 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramDurationSecs: String = "duration_secs"
     public static let paramReason: String = "reason"
     public static let paramRestoredCount: String = "restored_count"
-    public static let paramIsDepleted: String = "is_depleted"
 }
