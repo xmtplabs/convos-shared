@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# convos-shared pre-commit hook.
+#
+# Runs the metrics Gradle build (which regenerates the Swift package into
+# <repo>/ConvosMetrics/ and splices the metrics catalog into <repo>/README.md),
+# then aborts the commit if the working tree has uncommitted regenerated files.
+#
+# Install: ./scripts/install-hooks.sh
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "[pre-commit] Running metrics build (regenerates Swift package + README)..."
+(cd metrics && ./gradlew --quiet build)
+
+# Paths the build can modify. Anything that ends up dirty here must be staged
+# before the commit is allowed through.
+generated_paths=(
+    "ConvosMetrics"
+    "README.md"
+)
+
+unstaged="$(git diff --name-only -- "${generated_paths[@]}")"
+untracked="$(git ls-files --others --exclude-standard -- "${generated_paths[@]}")"
+
+if [ -n "$unstaged" ] || [ -n "$untracked" ]; then
+    echo
+    echo "[pre-commit] Regeneration produced changes that are not staged:" >&2
+    [ -n "$unstaged" ] && printf 'modified:\n%s\n' "$unstaged" >&2
+    [ -n "$untracked" ] && printf 'untracked:\n%s\n' "$untracked" >&2
+    echo >&2
+    echo "Review the diff, run 'git add' on the regenerated files, and commit again." >&2
+    exit 1
+fi
+
+echo "[pre-commit] Generated artifacts match the index. OK."
