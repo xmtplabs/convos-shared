@@ -42,6 +42,31 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
+    public func sharedConversation(memberCount: Int, hasAssistant: Bool, shareTarget: ShareTarget, hasExpiration: Bool, expiresAfterUse: Bool, isSuccess: Bool) async {
+        delegate?.sendEvent(name: Self.eventSharedConversation, properties: [
+            Self.paramMemberCount: memberCount,
+            Self.paramHasAssistant: hasAssistant,
+            Self.paramShareTarget: shareTarget.metricsString,
+            Self.paramHasExpiration: hasExpiration,
+            Self.paramExpiresAfterUse: expiresAfterUse,
+            Self.paramIsSuccess: isSuccess,
+        ])
+    }
+
+    public func builtAgent(buildDuration: Float, instructionCharCount: Int, instructionWordCount: Int, attachmentTypes: [String], hasVoiceMemo: Bool, voiceMemoDuration: Float, connectionTypes: [String], entryMode: AgentBuilderEntryMode, isSuccess: Bool) async {
+        delegate?.sendEvent(name: Self.eventBuiltAgent, properties: [
+            Self.paramBuildDuration: buildDuration,
+            Self.paramInstructionCharCount: instructionCharCount,
+            Self.paramInstructionWordCount: instructionWordCount,
+            Self.paramAttachmentTypes: attachmentTypes,
+            Self.paramHasVoiceMemo: hasVoiceMemo,
+            Self.paramVoiceMemoDuration: voiceMemoDuration,
+            Self.paramConnectionTypes: connectionTypes,
+            Self.paramEntryMode: entryMode.metricsString,
+            Self.paramIsSuccess: isSuccess,
+        ])
+    }
+
     public func purchaseInitiated(productId: String, tier: SubscriptionTier, period: SubscriptionPeriod, source: PaywallSource) async {
         delegate?.sendEvent(name: Self.eventPurchaseInitiated, properties: [
             Self.paramProductId: productId,
@@ -87,6 +112,8 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventInvitedToConversation: String = "invited_to_conversation"
     public static let eventAddedAssistant: String = "added_assistant"
     public static let eventSentMessage: String = "sent_message"
+    public static let eventSharedConversation: String = "shared_conversation"
+    public static let eventBuiltAgent: String = "built_agent"
     public static let eventPurchaseInitiated: String = "purchase_initiated"
     public static let eventPurchaseSucceeded: String = "purchase_succeeded"
     public static let eventPurchaseCancelled: String = "purchase_cancelled"
@@ -100,6 +127,16 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramAttachmentTypes: String = "attachment_types"
     public static let paramHasText: String = "has_text"
     public static let paramIsSuccess: String = "is_success"
+    public static let paramShareTarget: String = "share_target"
+    public static let paramHasExpiration: String = "has_expiration"
+    public static let paramExpiresAfterUse: String = "expires_after_use"
+    public static let paramBuildDuration: String = "build_duration"
+    public static let paramInstructionCharCount: String = "instruction_char_count"
+    public static let paramInstructionWordCount: String = "instruction_word_count"
+    public static let paramHasVoiceMemo: String = "has_voice_memo"
+    public static let paramVoiceMemoDuration: String = "voice_memo_duration"
+    public static let paramConnectionTypes: String = "connection_types"
+    public static let paramEntryMode: String = "entry_mode"
     public static let paramProductId: String = "product_id"
     public static let paramTier: String = "tier"
     public static let paramPeriod: String = "period"

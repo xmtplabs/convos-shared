@@ -20,6 +20,21 @@ enum class SubscriptionPeriod {
     ANNUAL,
 }
 
+enum class ShareTarget {
+    MESSAGES,
+    MAIL,
+    COPY,
+    QR_CODE,
+    AIRDROP,
+    OTHER,
+    CANCELLED,
+}
+
+enum class AgentBuilderEntryMode {
+    COMPOSER,
+    VOICE_MEMO,
+}
+
 enum class PurchaseFailureReason {
     PRODUCT_NOT_FOUND,
     PURCHASE_PENDING,
@@ -55,6 +70,27 @@ interface CoreActions {
         attachmentTypes: List<String>,
         hasText: Boolean,
         hasAssistant: Boolean,
+        isSuccess: Boolean
+    )
+
+    suspend fun sharedConversation(
+        memberCount: Int,
+        hasAssistant: Boolean,
+        shareTarget: ShareTarget,
+        hasExpiration: Boolean,
+        expiresAfterUse: Boolean,
+        isSuccess: Boolean
+    )
+
+    suspend fun builtAgent(
+        buildDuration: Float,
+        instructionCharCount: Int,
+        instructionWordCount: Int,
+        attachmentTypes: List<String>,
+        hasVoiceMemo: Boolean,
+        voiceMemoDuration: Float,
+        connectionTypes: List<String>,
+        entryMode: AgentBuilderEntryMode,
         isSuccess: Boolean
     )
 

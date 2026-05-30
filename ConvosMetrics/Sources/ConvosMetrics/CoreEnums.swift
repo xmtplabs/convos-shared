@@ -16,6 +16,44 @@ extension ConversationSource {
     }
 }
 
+public enum ShareTarget {
+    case messages
+    case mail
+    case copy
+    case qrCode
+    case airdrop
+    case other
+    case cancelled
+}
+
+extension ShareTarget {
+    public var metricsString: String {
+        switch self {
+        case .messages: return "messages"
+        case .mail: return "mail"
+        case .copy: return "copy"
+        case .qrCode: return "qr_code"
+        case .airdrop: return "airdrop"
+        case .other: return "other"
+        case .cancelled: return "cancelled"
+        }
+    }
+}
+
+public enum AgentBuilderEntryMode {
+    case composer
+    case voiceMemo
+}
+
+extension AgentBuilderEntryMode {
+    public var metricsString: String {
+        switch self {
+        case .composer: return "composer"
+        case .voiceMemo: return "voice_memo"
+        }
+    }
+}
+
 public enum SubscriptionTier {
     case builder
     case pro
