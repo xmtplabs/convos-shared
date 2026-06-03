@@ -618,6 +618,7 @@ public protocol AddMembersNavigator: AnyObject {
 }
 
 public protocol AgentBuilderNavigator: AnyObject {
+    func navigateTo(conversation: ConversationNavigatorArgs)
     func closed(context: ScreenContext)
 }
 

@@ -3,21 +3,28 @@ digraph navigators {
     node [shape=rectangle, style=rounded, fontname="Helvetica"];
     edge [fontname="Helvetica", fontsize=10];
 
-    "tab_root";
-    "conversations";
+    { rank=same;
+        "tab_root";
+    }
+    { rank=same;
+        "conversations";
+        "stuff_overview";
+        "contacts";
+    }
     "conversation";
-    "stuff_overview";
     "stuff_detail";
     "app_settings";
     "new_conversation";
     "explode_confirmation";
+    "connection_grant";
+    "explode_info";
+    "pin_limit_info";
+    "contact_card";
+    "agent_builder";
     "conversation_info";
-    "conversation_info_edit";
-    "members_list";
     "member_profile";
     "share_invite";
     "reactions";
-    "agent_files_links";
     "setup_profile";
     "invite_accepted";
     "request_push_notifications";
@@ -27,14 +34,7 @@ digraph navigators {
     "connections";
     "backup_restore";
     "delete_all_data";
-    "quickname_randomizer";
-    "invite_code_entry";
-    "connection_grant";
     "devices";
-    "pair_device";
-    "remove_device";
-    "explode_info";
-    "pin_limit_info";
     "locked_convo_info";
     "full_convo_info";
     "conversation_forked_info";
@@ -45,15 +45,19 @@ digraph navigators {
     "agent_power_info";
     "exploded_invite_info";
     "backwards_secrecy_info";
-    "lock_convo_confirmation";
-    "contacts";
-    "contact_card";
     "agent_template_contact_card";
     "add_members";
-    "agent_builder";
     "thinking_detail";
     "attachment_preview";
     "paywall";
+    "conversation_info_edit";
+    "members_list";
+    "agent_files_links";
+    "quickname_randomizer";
+    "invite_code_entry";
+    "pair_device";
+    "remove_device";
+    "lock_convo_confirmation";
     "subscription_settings";
     "billing_debug";
 
@@ -127,6 +131,7 @@ digraph navigators {
     "contacts" -> "app_settings" [color=blue, style=dashed];
     "contacts" -> "agent_builder" [color=blue, style=dashed];
     "contact_card" -> "contacts" [color=black];
+    "agent_builder" -> "conversation" [color=black];
     "attachment_preview" -> "contact_card" [color=black];
     "attachment_preview" -> "agent_template_contact_card" [color=black];
     "subscription_settings" -> "paywall" [color=blue, style=dashed];

@@ -1156,6 +1156,11 @@ public class AgentBuilderCollector: AgentBuilderNavigator {
         self.delegate = delegate
     }
 
+    public func navigateTo(conversation: ConversationNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: ConversationCollector.name)
+        instance?.navigateTo(conversation: conversation)
+    }
+
     public func closed(context: ScreenContext) {
         delegate?.closed(screen: Self.name, context: context)
         instance?.closed(context: context)

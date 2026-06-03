@@ -121,7 +121,7 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 | `contact_card` | `inboxId`: String<br>`conversationId`: String? | navigateTo → `Contacts` |
 | `agent_template_contact_card` | `templateId`: String<br>`inboxId`: String<br>`conversationId`: String? | _leaf_ |
 | `add_members` | `conversationId`: String<br>`conversationTitle`: String? | _leaf_ |
-| `agent_builder` | `conversationId`: String<br>`entryMode`: AgentBuilderEntryPoint { INLINE, SHEET } | _leaf_ |
+| `agent_builder` | `conversationId`: String<br>`entryMode`: AgentBuilderEntryPoint { INLINE, SHEET } | navigateTo → `Conversation` |
 | `thinking_detail` | `conversationId`: String<br>`senderInboxId`: String<br>`messageId`: String | _leaf_ |
 | `attachment_preview` | `conversationId`: String?<br>`senderInboxId`: String? | navigateTo → `ContactCard`<br>navigateTo → `AgentTemplateContactCard` |
 | `paywall` | `source`: PaywallSource { SETTINGS, LOW_BALANCE_BANNER, ONBOARDING, MEMBER_CARD, DEBUG } | _leaf_ |

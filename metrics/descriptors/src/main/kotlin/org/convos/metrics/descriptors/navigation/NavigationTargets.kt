@@ -473,6 +473,8 @@ interface AgentBuilderNavigator {
         val entryMode: AgentBuilderEntryPoint = AgentBuilderEntryPoint.SHEET,
     )
 
+    fun navigateTo(conversation: ConversationNavigator.Args)
+
     fun closed(context: ScreenContext)
 }
 

@@ -10,6 +10,11 @@ class NavigatorGraphRenderer(private val codeGenerator: CodeGenerator) {
     fun render(graph: NavigationGraph) {
         if (graph.targets.isEmpty()) return
 
+        val depths = computeDepths(graph)
+        val nodesByDepth = graph.targets.values
+            .groupBy { depths[it.name] ?: 0 }
+            .toSortedMap()
+
         val dot = buildString {
             appendLine("digraph navigators {")
             appendLine("    rankdir=LR;")
@@ -17,8 +22,18 @@ class NavigatorGraphRenderer(private val codeGenerator: CodeGenerator) {
             appendLine("    edge [fontname=\"Helvetica\", fontsize=10];")
             appendLine()
 
-            for (descriptor in graph.targets.values) {
-                appendLine("    \"${descriptor.metricsName}\";")
+            for ((depth, descriptors) in nodesByDepth) {
+                if (depth <= 1) {
+                    appendLine("    { rank=same;")
+                    for (descriptor in descriptors) {
+                        appendLine("        \"${descriptor.metricsName}\";")
+                    }
+                    appendLine("    }")
+                } else {
+                    for (descriptor in descriptors) {
+                        appendLine("    \"${descriptor.metricsName}\";")
+                    }
+                }
             }
             appendLine()
 
@@ -43,5 +58,40 @@ class NavigatorGraphRenderer(private val codeGenerator: CodeGenerator) {
             fileName = "navigators",
             extensionName = "dot",
         ).bufferedWriter().use { it.write(dot) }
+    }
+
+    private fun computeDepths(graph: NavigationGraph): Map<String, Int> {
+        val rootName = graph.targets.values
+            .firstOrNull { it.metricsName == TAB_ROOT_METRICS_NAME }
+            ?.name
+            ?: return emptyMap()
+
+        val depths = mutableMapOf<String, Int>()
+        val queue: ArrayDeque<String> = ArrayDeque()
+        depths[rootName] = 0
+        queue.add(rootName)
+        while (queue.isNotEmpty()) {
+            val currentName = queue.removeFirst()
+            val current = graph.targets[currentName] ?: continue
+            val currentDepth = depths.getValue(currentName)
+            for (method in current.navigationMethods) {
+                val targetName = method.targetScreen
+                if (graph.targets.containsKey(targetName) && targetName !in depths) {
+                    depths[targetName] = currentDepth + 1
+                    queue.add(targetName)
+                }
+            }
+        }
+
+        val unreachableDepth = (depths.values.maxOrNull() ?: 0) + 1
+        for (name in graph.targets.keys) {
+            depths.putIfAbsent(name, unreachableDepth)
+        }
+
+        return depths
+    }
+
+    companion object {
+        private const val TAB_ROOT_METRICS_NAME = "tab_root"
     }
 }
