@@ -5,6 +5,17 @@ import org.convos.metrics.annotations.NavigationTarget
 // Primary Navigators
 
 @NavigationTarget
+interface TabRootNavigator {
+    class Args
+
+    fun navigateTo(conversations: ConversationsNavigator.Args)
+    fun navigateTo(stuffOverview: StuffOverviewNavigator.Args)
+    fun navigateTo(contacts: ContactsNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
 interface ConversationsNavigator {
     class Args
 
@@ -39,8 +50,8 @@ interface ConversationNavigator {
     fun present(revealMediaInfo: RevealMediaInfoNavigator.Args)
     fun present(photosInfo: PhotosInfoNavigator.Args)
     fun present(assistantConfirmation: AssistantConfirmationNavigator.Args)
-    fun present(assistantInfo: AssistantInfoNavigator.Args)
-    fun present(processingPowerInfo: ProcessingPowerInfoNavigator.Args)
+    fun present(agentInfo: AgentInfoNavigator.Args)
+    fun present(agentPowerInfo: AgentPowerInfoNavigator.Args)
     fun present(explodedInviteInfo: ExplodedInviteInfoNavigator.Args)
     fun present(setupProfile: SetupProfileNavigator.Args)
     fun present(inviteAccepted: InviteAcceptedNavigator.Args)
@@ -51,7 +62,29 @@ interface ConversationNavigator {
     fun present(agentTemplateContactCard: AgentTemplateContactCardNavigator.Args)
     fun present(agentBuilder: AgentBuilderNavigator.Args)
     fun present(thinkingDetail: ThinkingDetailNavigator.Args)
-    fun present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigator.Args)
+    fun present(attachmentPreview: AttachmentPreviewNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface StuffOverviewNavigator {
+    class Args
+
+    fun navigateTo(stuffDetail: StuffDetailNavigator.Args)
+    fun present(appSettings: AppSettingsNavigator.Args)
+    fun present(newConversation: NewConversationNavigator.Args)
+    fun present(agentBuilder: AgentBuilderNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface StuffDetailNavigator {
+    data class Args(
+        val itemId: String,
+        val conversationId: String? = null,
+    )
 
     fun closed(context: ScreenContext)
 }
@@ -68,8 +101,8 @@ interface AppSettingsNavigator {
     fun navigateTo(connections: ConnectionsNavigator.Args)
     fun navigateTo(backupRestore: BackupRestoreNavigator.Args)
     fun navigateTo(deleteAllData: DeleteAllDataNavigator.Args)
-    fun navigateTo(subscriptionSettings: SubscriptionSettingsNavigator.Args)
-    fun navigateTo(contacts: ContactsNavigator.Args)
+    fun navigateTo(devices: DevicesNavigator.Args)
+    fun present(paywall: PaywallNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -107,7 +140,7 @@ interface ConversationInfoNavigator {
 
     fun navigateTo(edit: ConversationInfoEditNavigator.Args)
     fun navigateTo(membersList: MembersListNavigator.Args)
-    fun navigateTo(filesAndLinks: AssistantFilesLinksNavigator.Args)
+    fun navigateTo(filesAndLinks: AgentFilesLinksNavigator.Args)
     fun navigateTo(agentTemplateContactCard: AgentTemplateContactCardNavigator.Args)
 
     fun closed(context: ScreenContext)
@@ -158,10 +191,10 @@ interface ReactionsNavigator {
 }
 
 @NavigationTarget
-interface AssistantFilesLinksNavigator {
+interface AgentFilesLinksNavigator {
     data class Args(val conversationId: String)
 
-    fun present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigator.Args)
+    fun present(attachmentPreview: AttachmentPreviewNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -263,6 +296,34 @@ interface ConnectionGrantNavigator {
     fun closed(context: ScreenContext)
 }
 
+@NavigationTarget
+interface DevicesNavigator {
+    class Args
+
+    fun present(pairDevice: PairDeviceNavigator.Args)
+    fun present(removeDevice: RemoveDeviceNavigator.Args)
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface PairDeviceNavigator {
+    data class Args(
+        val pairingId: String? = null,
+        val initiatorName: String? = null,
+        val expiresAt: Long? = null,
+    )
+
+    fun closed(context: ScreenContext)
+}
+
+@NavigationTarget
+interface RemoveDeviceNavigator {
+    data class Args(val deviceId: String)
+
+    fun closed(context: ScreenContext)
+}
+
 // Info Sheets
 
 @NavigationTarget
@@ -324,14 +385,14 @@ interface AssistantConfirmationNavigator {
 }
 
 @NavigationTarget
-interface AssistantInfoNavigator {
+interface AgentInfoNavigator {
     class Args
 
     fun closed(context: ScreenContext)
 }
 
 @NavigationTarget
-interface ProcessingPowerInfoNavigator {
+interface AgentPowerInfoNavigator {
     class Args
 
     fun closed(context: ScreenContext)
@@ -366,6 +427,8 @@ interface ContactsNavigator {
 
     fun navigateTo(contactCard: ContactCardNavigator.Args)
     fun present(newConversation: NewConversationNavigator.Args)
+    fun present(appSettings: AppSettingsNavigator.Args)
+    fun present(agentBuilder: AgentBuilderNavigator.Args)
 
     fun closed(context: ScreenContext)
 }
@@ -405,9 +468,17 @@ interface AddMembersNavigator {
 
 @NavigationTarget
 interface AgentBuilderNavigator {
-    data class Args(val conversationId: String)
+    data class Args(
+        val conversationId: String,
+        val entryMode: AgentBuilderEntryPoint = AgentBuilderEntryPoint.SHEET,
+    )
 
     fun closed(context: ScreenContext)
+}
+
+enum class AgentBuilderEntryPoint {
+    INLINE,
+    SHEET,
 }
 
 @NavigationTarget
@@ -422,7 +493,7 @@ interface ThinkingDetailNavigator {
 }
 
 @NavigationTarget
-interface HtmlAttachmentPreviewNavigator {
+interface AttachmentPreviewNavigator {
     data class Args(
         val conversationId: String? = null,
         val senderInboxId: String? = null,

@@ -1,3 +1,35 @@
+public class TabRootCollector: TabRootNavigator {
+    private weak var instance: TabRootNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: TabRootNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func navigateTo(conversations: ConversationsNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: ConversationsCollector.name)
+        instance?.navigateTo(conversations: conversations)
+    }
+
+    public func navigateTo(stuffOverview: StuffOverviewNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: StuffOverviewCollector.name)
+        instance?.navigateTo(stuffOverview: stuffOverview)
+    }
+
+    public func navigateTo(contacts: ContactsNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: ContactsCollector.name)
+        instance?.navigateTo(contacts: contacts)
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "tab_root"
+}
+
 public class ConversationsCollector: ConversationsNavigator {
     private weak var instance: ConversationsNavigator?
     private weak var delegate: CollectorDelegate?
@@ -139,14 +171,14 @@ public class ConversationCollector: ConversationNavigator {
         instance?.present(assistantConfirmation: assistantConfirmation)
     }
 
-    public func present(assistantInfo: AssistantInfoNavigatorArgs) {
-        delegate?.presented(source: Self.name, target: AssistantInfoCollector.name)
-        instance?.present(assistantInfo: assistantInfo)
+    public func present(agentInfo: AgentInfoNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AgentInfoCollector.name)
+        instance?.present(agentInfo: agentInfo)
     }
 
-    public func present(processingPowerInfo: ProcessingPowerInfoNavigatorArgs) {
-        delegate?.presented(source: Self.name, target: ProcessingPowerInfoCollector.name)
-        instance?.present(processingPowerInfo: processingPowerInfo)
+    public func present(agentPowerInfo: AgentPowerInfoNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AgentPowerInfoCollector.name)
+        instance?.present(agentPowerInfo: agentPowerInfo)
     }
 
     public func present(explodedInviteInfo: ExplodedInviteInfoNavigatorArgs) {
@@ -199,9 +231,9 @@ public class ConversationCollector: ConversationNavigator {
         instance?.present(thinkingDetail: thinkingDetail)
     }
 
-    public func present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigatorArgs) {
-        delegate?.presented(source: Self.name, target: HtmlAttachmentPreviewCollector.name)
-        instance?.present(htmlAttachmentPreview: htmlAttachmentPreview)
+    public func present(attachmentPreview: AttachmentPreviewNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AttachmentPreviewCollector.name)
+        instance?.present(attachmentPreview: attachmentPreview)
     }
 
     public func closed(context: ScreenContext) {
@@ -210,6 +242,60 @@ public class ConversationCollector: ConversationNavigator {
     }
 
     public static let name: String = "conversation"
+}
+
+public class StuffOverviewCollector: StuffOverviewNavigator {
+    private weak var instance: StuffOverviewNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: StuffOverviewNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func navigateTo(stuffDetail: StuffDetailNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: StuffDetailCollector.name)
+        instance?.navigateTo(stuffDetail: stuffDetail)
+    }
+
+    public func present(appSettings: AppSettingsNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AppSettingsCollector.name)
+        instance?.present(appSettings: appSettings)
+    }
+
+    public func present(newConversation: NewConversationNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: NewConversationCollector.name)
+        instance?.present(newConversation: newConversation)
+    }
+
+    public func present(agentBuilder: AgentBuilderNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AgentBuilderCollector.name)
+        instance?.present(agentBuilder: agentBuilder)
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "stuff_overview"
+}
+
+public class StuffDetailCollector: StuffDetailNavigator {
+    private weak var instance: StuffDetailNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: StuffDetailNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "stuff_detail"
 }
 
 public class AppSettingsCollector: AppSettingsNavigator {
@@ -251,14 +337,14 @@ public class AppSettingsCollector: AppSettingsNavigator {
         instance?.navigateTo(deleteAllData: deleteAllData)
     }
 
-    public func navigateTo(subscriptionSettings: SubscriptionSettingsNavigatorArgs) {
-        delegate?.navigatedTo(source: Self.name, target: SubscriptionSettingsCollector.name)
-        instance?.navigateTo(subscriptionSettings: subscriptionSettings)
+    public func navigateTo(devices: DevicesNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: DevicesCollector.name)
+        instance?.navigateTo(devices: devices)
     }
 
-    public func navigateTo(contacts: ContactsNavigatorArgs) {
-        delegate?.navigatedTo(source: Self.name, target: ContactsCollector.name)
-        instance?.navigateTo(contacts: contacts)
+    public func present(paywall: PaywallNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: PaywallCollector.name)
+        instance?.present(paywall: paywall)
     }
 
     public func closed(context: ScreenContext) {
@@ -327,8 +413,8 @@ public class ConversationInfoCollector: ConversationInfoNavigator {
         instance?.navigateTo(membersList: membersList)
     }
 
-    public func navigateTo(filesAndLinks: AssistantFilesLinksNavigatorArgs) {
-        delegate?.navigatedTo(source: Self.name, target: AssistantFilesLinksCollector.name)
+    public func navigateTo(filesAndLinks: AgentFilesLinksNavigatorArgs) {
+        delegate?.navigatedTo(source: Self.name, target: AgentFilesLinksCollector.name)
         instance?.navigateTo(filesAndLinks: filesAndLinks)
     }
 
@@ -440,18 +526,18 @@ public class ReactionsCollector: ReactionsNavigator {
     public static let name: String = "reactions"
 }
 
-public class AssistantFilesLinksCollector: AssistantFilesLinksNavigator {
-    private weak var instance: AssistantFilesLinksNavigator?
+public class AgentFilesLinksCollector: AgentFilesLinksNavigator {
+    private weak var instance: AgentFilesLinksNavigator?
     private weak var delegate: CollectorDelegate?
 
-    public init(instance: AssistantFilesLinksNavigator, delegate: CollectorDelegate) {
+    public init(instance: AgentFilesLinksNavigator, delegate: CollectorDelegate) {
         self.instance = instance
         self.delegate = delegate
     }
 
-    public func present(htmlAttachmentPreview: HtmlAttachmentPreviewNavigatorArgs) {
-        delegate?.presented(source: Self.name, target: HtmlAttachmentPreviewCollector.name)
-        instance?.present(htmlAttachmentPreview: htmlAttachmentPreview)
+    public func present(attachmentPreview: AttachmentPreviewNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AttachmentPreviewCollector.name)
+        instance?.present(attachmentPreview: attachmentPreview)
     }
 
     public func closed(context: ScreenContext) {
@@ -459,7 +545,7 @@ public class AssistantFilesLinksCollector: AssistantFilesLinksNavigator {
         instance?.closed(context: context)
     }
 
-    public static let name: String = "assistant_files_links"
+    public static let name: String = "agent_files_links"
 }
 
 public class SetupProfileCollector: SetupProfileNavigator {
@@ -681,6 +767,67 @@ public class ConnectionGrantCollector: ConnectionGrantNavigator {
     public static let name: String = "connection_grant"
 }
 
+public class DevicesCollector: DevicesNavigator {
+    private weak var instance: DevicesNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: DevicesNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func present(pairDevice: PairDeviceNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: PairDeviceCollector.name)
+        instance?.present(pairDevice: pairDevice)
+    }
+
+    public func present(removeDevice: RemoveDeviceNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: RemoveDeviceCollector.name)
+        instance?.present(removeDevice: removeDevice)
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "devices"
+}
+
+public class PairDeviceCollector: PairDeviceNavigator {
+    private weak var instance: PairDeviceNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: PairDeviceNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "pair_device"
+}
+
+public class RemoveDeviceCollector: RemoveDeviceNavigator {
+    private weak var instance: RemoveDeviceNavigator?
+    private weak var delegate: CollectorDelegate?
+
+    public init(instance: RemoveDeviceNavigator, delegate: CollectorDelegate) {
+        self.instance = instance
+        self.delegate = delegate
+    }
+
+    public func closed(context: ScreenContext) {
+        delegate?.closed(screen: Self.name, context: context)
+        instance?.closed(context: context)
+    }
+
+    public static let name: String = "remove_device"
+}
+
 public class ExplodeInfoCollector: ExplodeInfoNavigator {
     private weak var instance: ExplodeInfoNavigator?
     private weak var delegate: CollectorDelegate?
@@ -822,11 +969,11 @@ public class AssistantConfirmationCollector: AssistantConfirmationNavigator {
     public static let name: String = "assistant_confirmation"
 }
 
-public class AssistantInfoCollector: AssistantInfoNavigator {
-    private weak var instance: AssistantInfoNavigator?
+public class AgentInfoCollector: AgentInfoNavigator {
+    private weak var instance: AgentInfoNavigator?
     private weak var delegate: CollectorDelegate?
 
-    public init(instance: AssistantInfoNavigator, delegate: CollectorDelegate) {
+    public init(instance: AgentInfoNavigator, delegate: CollectorDelegate) {
         self.instance = instance
         self.delegate = delegate
     }
@@ -836,14 +983,14 @@ public class AssistantInfoCollector: AssistantInfoNavigator {
         instance?.closed(context: context)
     }
 
-    public static let name: String = "assistant_info"
+    public static let name: String = "agent_info"
 }
 
-public class ProcessingPowerInfoCollector: ProcessingPowerInfoNavigator {
-    private weak var instance: ProcessingPowerInfoNavigator?
+public class AgentPowerInfoCollector: AgentPowerInfoNavigator {
+    private weak var instance: AgentPowerInfoNavigator?
     private weak var delegate: CollectorDelegate?
 
-    public init(instance: ProcessingPowerInfoNavigator, delegate: CollectorDelegate) {
+    public init(instance: AgentPowerInfoNavigator, delegate: CollectorDelegate) {
         self.instance = instance
         self.delegate = delegate
     }
@@ -853,7 +1000,7 @@ public class ProcessingPowerInfoCollector: ProcessingPowerInfoNavigator {
         instance?.closed(context: context)
     }
 
-    public static let name: String = "processing_power_info"
+    public static let name: String = "agent_power_info"
 }
 
 public class ExplodedInviteInfoCollector: ExplodedInviteInfoNavigator {
@@ -924,6 +1071,16 @@ public class ContactsCollector: ContactsNavigator {
     public func present(newConversation: NewConversationNavigatorArgs) {
         delegate?.presented(source: Self.name, target: NewConversationCollector.name)
         instance?.present(newConversation: newConversation)
+    }
+
+    public func present(appSettings: AppSettingsNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AppSettingsCollector.name)
+        instance?.present(appSettings: appSettings)
+    }
+
+    public func present(agentBuilder: AgentBuilderNavigatorArgs) {
+        delegate?.presented(source: Self.name, target: AgentBuilderCollector.name)
+        instance?.present(agentBuilder: agentBuilder)
     }
 
     public func closed(context: ScreenContext) {
@@ -1024,11 +1181,11 @@ public class ThinkingDetailCollector: ThinkingDetailNavigator {
     public static let name: String = "thinking_detail"
 }
 
-public class HtmlAttachmentPreviewCollector: HtmlAttachmentPreviewNavigator {
-    private weak var instance: HtmlAttachmentPreviewNavigator?
+public class AttachmentPreviewCollector: AttachmentPreviewNavigator {
+    private weak var instance: AttachmentPreviewNavigator?
     private weak var delegate: CollectorDelegate?
 
-    public init(instance: HtmlAttachmentPreviewNavigator, delegate: CollectorDelegate) {
+    public init(instance: AttachmentPreviewNavigator, delegate: CollectorDelegate) {
         self.instance = instance
         self.delegate = delegate
     }
@@ -1048,7 +1205,7 @@ public class HtmlAttachmentPreviewCollector: HtmlAttachmentPreviewNavigator {
         instance?.closed(context: context)
     }
 
-    public static let name: String = "html_attachment_preview"
+    public static let name: String = "attachment_preview"
 }
 
 public class PaywallCollector: PaywallNavigator {

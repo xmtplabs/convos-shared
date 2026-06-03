@@ -74,18 +74,21 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 
 | Screen | Args | Outgoing |
 |--------|------|----------|
+| `tab_root` | _none_ | navigateTo → `Conversations`<br>navigateTo → `StuffOverview`<br>navigateTo → `Contacts` |
 | `conversations` | _none_ | navigateTo → `Conversation`<br>present → `AppSettings`<br>present → `NewConversation`<br>present → `ExplodeConfirmation`<br>present → `ConnectionGrant`<br>present → `ExplodeInfo`<br>present → `PinLimitInfo`<br>present → `ContactCard`<br>present → `AgentBuilder` |
-| `conversation` | `conversationId`: String | present → `Paywall`<br>present → `ConversationInfo`<br>present → `MyInfo`<br>present → `MemberProfile`<br>present → `ShareInvite`<br>present → `NewConversation`<br>present → `Reactions`<br>present → `ExplodeInfo`<br>present → `LockedConvoInfo`<br>present → `FullConvoInfo`<br>present → `ConversationForkedInfo`<br>present → `RevealMediaInfo`<br>present → `PhotosInfo`<br>present → `AssistantConfirmation`<br>present → `AssistantInfo`<br>present → `ProcessingPowerInfo`<br>present → `ExplodedInviteInfo`<br>present → `SetupProfile`<br>present → `InviteAccepted`<br>present → `RequestPushNotifications`<br>present → `BackwardsSecrecyInfo`<br>present → `AddMembers`<br>present → `ContactCard`<br>present → `AgentTemplateContactCard`<br>present → `AgentBuilder`<br>present → `ThinkingDetail`<br>present → `HtmlAttachmentPreview` |
-| `app_settings` | _none_ | navigateTo → `MyInfo`<br>navigateTo → `CustomizeSettings`<br>navigateTo → `AssistantSettings`<br>navigateTo → `Connections`<br>navigateTo → `BackupRestore`<br>navigateTo → `DeleteAllData`<br>navigateTo → `SubscriptionSettings`<br>navigateTo → `Contacts` |
+| `conversation` | `conversationId`: String | present → `Paywall`<br>present → `ConversationInfo`<br>present → `MyInfo`<br>present → `MemberProfile`<br>present → `ShareInvite`<br>present → `NewConversation`<br>present → `Reactions`<br>present → `ExplodeInfo`<br>present → `LockedConvoInfo`<br>present → `FullConvoInfo`<br>present → `ConversationForkedInfo`<br>present → `RevealMediaInfo`<br>present → `PhotosInfo`<br>present → `AssistantConfirmation`<br>present → `AgentInfo`<br>present → `AgentPowerInfo`<br>present → `ExplodedInviteInfo`<br>present → `SetupProfile`<br>present → `InviteAccepted`<br>present → `RequestPushNotifications`<br>present → `BackwardsSecrecyInfo`<br>present → `AddMembers`<br>present → `ContactCard`<br>present → `AgentTemplateContactCard`<br>present → `AgentBuilder`<br>present → `ThinkingDetail`<br>present → `AttachmentPreview` |
+| `stuff_overview` | _none_ | navigateTo → `StuffDetail`<br>present → `AppSettings`<br>present → `NewConversation`<br>present → `AgentBuilder` |
+| `stuff_detail` | `itemId`: String<br>`conversationId`: String? | _leaf_ |
+| `app_settings` | _none_ | navigateTo → `MyInfo`<br>navigateTo → `CustomizeSettings`<br>navigateTo → `AssistantSettings`<br>navigateTo → `Connections`<br>navigateTo → `BackupRestore`<br>navigateTo → `DeleteAllData`<br>navigateTo → `Devices`<br>present → `Paywall` |
 | `new_conversation` | `mode`: NewConversationMode { CREATE, SCANNER, JOIN_INVITE }<br>`inviteCode`: String? | navigateTo → `Conversation` |
 | `explode_confirmation` | `conversationId`: String | _leaf_ |
-| `conversation_info` | `conversationId`: String | navigateTo → `ConversationInfoEdit`<br>navigateTo → `MembersList`<br>navigateTo → `AssistantFilesLinks`<br>navigateTo → `AgentTemplateContactCard` |
+| `conversation_info` | `conversationId`: String | navigateTo → `ConversationInfoEdit`<br>navigateTo → `MembersList`<br>navigateTo → `AgentFilesLinks`<br>navigateTo → `AgentTemplateContactCard` |
 | `conversation_info_edit` | `conversationId`: String | _leaf_ |
 | `members_list` | `conversationId`: String | navigateTo → `MemberProfile`<br>navigateTo → `AgentTemplateContactCard` |
 | `member_profile` | `conversationId`: String<br>`memberId`: String | _leaf_ |
 | `share_invite` | `conversationId`: String | _leaf_ |
 | `reactions` | `conversationId`: String<br>`messageId`: String | _leaf_ |
-| `assistant_files_links` | `conversationId`: String | present → `HtmlAttachmentPreview` |
+| `agent_files_links` | `conversationId`: String | present → `AttachmentPreview` |
 | `setup_profile` | _none_ | _leaf_ |
 | `invite_accepted` | _none_ | _leaf_ |
 | `request_push_notifications` | _none_ | _leaf_ |
@@ -98,6 +101,9 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 | `quickname_randomizer` | _none_ | _leaf_ |
 | `invite_code_entry` | _none_ | _leaf_ |
 | `connection_grant` | `serviceId`: String<br>`conversationId`: String | _leaf_ |
+| `devices` | _none_ | present → `PairDevice`<br>present → `RemoveDevice` |
+| `pair_device` | `pairingId`: String?<br>`initiatorName`: String?<br>`expiresAt`: Long? | _leaf_ |
+| `remove_device` | `deviceId`: String | _leaf_ |
 | `explode_info` | _none_ | _leaf_ |
 | `pin_limit_info` | _none_ | _leaf_ |
 | `locked_convo_info` | `conversationId`: String | present → `LockConvoConfirmation` |
@@ -106,18 +112,18 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 | `reveal_media_info` | _none_ | _leaf_ |
 | `photos_info` | _none_ | _leaf_ |
 | `assistant_confirmation` | `conversationId`: String | _leaf_ |
-| `assistant_info` | _none_ | _leaf_ |
-| `processing_power_info` | _none_ | _leaf_ |
+| `agent_info` | _none_ | _leaf_ |
+| `agent_power_info` | _none_ | _leaf_ |
 | `exploded_invite_info` | _none_ | _leaf_ |
 | `backwards_secrecy_info` | _none_ | _leaf_ |
 | `lock_convo_confirmation` | `conversationId`: String | _leaf_ |
-| `contacts` | _none_ | navigateTo → `ContactCard`<br>present → `NewConversation` |
+| `contacts` | _none_ | navigateTo → `ContactCard`<br>present → `NewConversation`<br>present → `AppSettings`<br>present → `AgentBuilder` |
 | `contact_card` | `inboxId`: String<br>`conversationId`: String? | navigateTo → `Contacts` |
 | `agent_template_contact_card` | `templateId`: String<br>`inboxId`: String<br>`conversationId`: String? | _leaf_ |
 | `add_members` | `conversationId`: String<br>`conversationTitle`: String? | _leaf_ |
-| `agent_builder` | `conversationId`: String | _leaf_ |
+| `agent_builder` | `conversationId`: String<br>`entryMode`: AgentBuilderEntryPoint { INLINE, SHEET } | _leaf_ |
 | `thinking_detail` | `conversationId`: String<br>`senderInboxId`: String<br>`messageId`: String | _leaf_ |
-| `html_attachment_preview` | `conversationId`: String?<br>`senderInboxId`: String? | navigateTo → `ContactCard`<br>navigateTo → `AgentTemplateContactCard` |
+| `attachment_preview` | `conversationId`: String?<br>`senderInboxId`: String? | navigateTo → `ContactCard`<br>navigateTo → `AgentTemplateContactCard` |
 | `paywall` | `source`: PaywallSource { SETTINGS, LOW_BALANCE_BANNER, ONBOARDING, MEMBER_CARD, DEBUG } | _leaf_ |
 | `subscription_settings` | _none_ | present → `Paywall` |
 | `billing_debug` | _none_ | present → `Paywall`<br>navigateTo → `SubscriptionSettings` |
