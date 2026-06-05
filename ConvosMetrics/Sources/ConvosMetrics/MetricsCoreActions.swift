@@ -31,6 +31,28 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
+    public func assistantJoined(waitDuration: Float, surface: AssistantJoinSurface, memberCount: Int) async {
+        delegate?.sendEvent(name: Self.eventAssistantJoined, properties: [
+            Self.paramWaitDuration: waitDuration,
+            Self.paramSurface: surface.metricsString,
+            Self.paramMemberCount: memberCount,
+        ])
+    }
+
+    public func assistantJoinTimedOut(waitDuration: Float, surface: AssistantJoinSurface) async {
+        delegate?.sendEvent(name: Self.eventAssistantJoinTimedOut, properties: [
+            Self.paramWaitDuration: waitDuration,
+            Self.paramSurface: surface.metricsString,
+        ])
+    }
+
+    public func assistantJoinRescuedByPolling(streamAgeSecs: Float, pollTick: Int) async {
+        delegate?.sendEvent(name: Self.eventAssistantJoinRescuedByPolling, properties: [
+            Self.paramStreamAgeSecs: streamAgeSecs,
+            Self.paramPollTick: pollTick,
+        ])
+    }
+
     public func sentMessage(sendingTime: Float, memberCount: Int, attachmentTypes: [String], hasText: Bool, hasAssistant: Bool, isSuccess: Bool) async {
         delegate?.sendEvent(name: Self.eventSentMessage, properties: [
             Self.paramSendingTime: sendingTime,
@@ -111,6 +133,9 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventJoinedConversation: String = "joined_conversation"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
     public static let eventAddedAssistant: String = "added_assistant"
+    public static let eventAssistantJoined: String = "assistant_joined"
+    public static let eventAssistantJoinTimedOut: String = "assistant_join_timed_out"
+    public static let eventAssistantJoinRescuedByPolling: String = "assistant_join_rescued_by_polling"
     public static let eventSentMessage: String = "sent_message"
     public static let eventSharedConversation: String = "shared_conversation"
     public static let eventBuiltAgent: String = "built_agent"
@@ -123,6 +148,10 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramMemberCount: String = "member_count"
     public static let paramHasAssistant: String = "has_assistant"
     public static let paramSource: String = "source"
+    public static let paramWaitDuration: String = "wait_duration"
+    public static let paramSurface: String = "surface"
+    public static let paramStreamAgeSecs: String = "stream_age_secs"
+    public static let paramPollTick: String = "poll_tick"
     public static let paramSendingTime: String = "sending_time"
     public static let paramAttachmentTypes: String = "attachment_types"
     public static let paramHasText: String = "has_text"

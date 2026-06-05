@@ -16,6 +16,22 @@ extension ConversationSource {
     }
 }
 
+public enum AssistantJoinSurface {
+    case statusMessage
+    case contactCard
+    case builderPlaceholder
+}
+
+extension AssistantJoinSurface {
+    public var metricsString: String {
+        switch self {
+        case .statusMessage: return "status_message"
+        case .contactCard: return "contact_card"
+        case .builderPlaceholder: return "builder_placeholder"
+        }
+    }
+}
+
 public enum ShareTarget {
     case messages
     case mail

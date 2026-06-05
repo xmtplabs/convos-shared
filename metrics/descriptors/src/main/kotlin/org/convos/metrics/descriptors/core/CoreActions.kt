@@ -44,6 +44,15 @@ enum class PurchaseFailureReason {
     UNKNOWN,
 }
 
+// The UI surface where the user watches an assistant join after requesting
+// one: the in-chat pending status bubble (bare add), the agent contact card
+// (template add / deep link), or the agent-builder placeholder (post-Make).
+enum class AssistantJoinSurface {
+    STATUS_MESSAGE,
+    CONTACT_CARD,
+    BUILDER_PLACEHOLDER,
+}
+
 @CoreActionsTarget
 interface CoreActions {
     suspend fun startedConversation()
@@ -62,6 +71,31 @@ interface CoreActions {
 
     suspend fun addedAssistant(
         memberCount: Int
+    )
+
+    // Fired when a verified assistant actually appears in the conversation's
+    // member list after a join was requested. `waitDuration` is the seconds
+    // the user spent watching the joining/verifying state.
+    suspend fun assistantJoined(
+        waitDuration: Float,
+        surface: AssistantJoinSurface,
+        memberCount: Int
+    )
+
+    // Fired when no verified assistant appeared within the join wait window
+    // (the assistant backend gives up after about two minutes).
+    suspend fun assistantJoinTimedOut(
+        waitDuration: Float,
+        surface: AssistantJoinSurface
+    )
+
+    // Fired when the client's join-request polling fallback processed an
+    // assistant join request that the realtime message stream had missed -
+    // direct evidence of a silently dead stream. `streamAgeSecs` is the time
+    // since the stream last delivered any message (-1 when it never did).
+    suspend fun assistantJoinRescuedByPolling(
+        streamAgeSecs: Float,
+        pollTick: Int
     )
 
     suspend fun sentMessage(
