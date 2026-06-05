@@ -18,6 +18,13 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
+    public func conversationJoinTimedOut(waitDuration: Float, source: ConversationSource) async {
+        delegate?.sendEvent(name: Self.eventConversationJoinTimedOut, properties: [
+            Self.paramWaitDuration: waitDuration,
+            Self.paramSource: source.metricsString,
+        ])
+    }
+
     public func invitedToConversation(memberCount: Int, hasAssistant: Bool) async {
         delegate?.sendEvent(name: Self.eventInvitedToConversation, properties: [
             Self.paramMemberCount: memberCount,
@@ -131,6 +138,7 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
 
     public static let eventStartedConversation: String = "started_conversation"
     public static let eventJoinedConversation: String = "joined_conversation"
+    public static let eventConversationJoinTimedOut: String = "conversation_join_timed_out"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
     public static let eventAddedAssistant: String = "added_assistant"
     public static let eventAssistantJoined: String = "assistant_joined"

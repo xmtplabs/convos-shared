@@ -1,6 +1,7 @@
 public protocol CoreActions: AnyObject, Sendable {
     func startedConversation() async
     func joinedConversation(verificationDuration: Float, memberCount: Int, hasAssistant: Bool, source: ConversationSource) async
+    func conversationJoinTimedOut(waitDuration: Float, source: ConversationSource) async
     func invitedToConversation(memberCount: Int, hasAssistant: Bool) async
     func addedAssistant(memberCount: Int) async
     func assistantJoined(waitDuration: Float, surface: AssistantJoinSurface, memberCount: Int) async

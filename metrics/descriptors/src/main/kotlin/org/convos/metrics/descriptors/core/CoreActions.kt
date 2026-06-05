@@ -64,6 +64,16 @@ interface CoreActions {
         source: ConversationSource
     )
 
+    // Fired when an invite join is still unverified after the client wait
+    // window - the joiner watched the "Verifying" state without the
+    // conversation creator's device approving the join request (counterpart
+    // to joinedConversation's verificationDuration, which only samples
+    // successes).
+    suspend fun conversationJoinTimedOut(
+        waitDuration: Float,
+        source: ConversationSource
+    )
+
     suspend fun invitedToConversation(
         memberCount: Int,
         hasAssistant: Boolean
