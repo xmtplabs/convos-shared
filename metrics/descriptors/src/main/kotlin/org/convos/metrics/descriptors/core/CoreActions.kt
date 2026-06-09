@@ -44,34 +44,36 @@ enum class PurchaseFailureReason {
     UNKNOWN,
 }
 
-// The UI surface where the user watches an assistant join after requesting
-// one: the in-chat pending status bubble (bare add), the agent contact card
-// (template add / deep link), or the agent-builder placeholder (post-Make).
-enum class AssistantJoinSurface {
-    STATUS_MESSAGE,
-    CONTACT_CARD,
-    BUILDER_PLACEHOLDER,
+// How the user initiated an assistant join - the stable entry-point intent,
+// captured at request time and carried through to the join moment. Defined by
+// intent (not by the UI surface it happens to render on) so the metric stays
+// comparable across UI redesigns, mirroring ConversationSource.
+enum class AssistantJoinSource {
+    // Bare "add an assistant" affordance in a conversation, plus the
+    // multi-select contacts picker.
+    ADD_TO_CONVERSATION,
+    // Agent template / share link / convos://template deep link.
+    AGENT_TEMPLATE,
+    // Agent builder, after the user taps Make.
+    AGENT_BUILDER,
 }
 
 @CoreActionsTarget
 interface CoreActions {
     suspend fun startedConversation()
 
+    // Terminal event for an invite-join attempt. `isSuccess` distinguishes a
+    // completed join from one that timed out in the "Verifying" state because
+    // the conversation creator's device never approved the join request.
+    // `verificationDuration` is the seconds the user spent waiting in both
+    // cases. `memberCount` / `hasAssistant` describe the joined conversation
+    // and are null on timeout (the user never entered it).
     suspend fun joinedConversation(
         verificationDuration: Float,
-        memberCount: Int,
-        hasAssistant: Boolean,
-        source: ConversationSource
-    )
-
-    // Fired when an invite join is still unverified after the client wait
-    // window - the joiner watched the "Verifying" state without the
-    // conversation creator's device approving the join request (counterpart
-    // to joinedConversation's verificationDuration, which only samples
-    // successes).
-    suspend fun conversationJoinTimedOut(
-        waitDuration: Float,
-        source: ConversationSource
+        memberCount: Int?,
+        hasAssistant: Boolean?,
+        source: ConversationSource,
+        isSuccess: Boolean
     )
 
     suspend fun invitedToConversation(
@@ -83,20 +85,18 @@ interface CoreActions {
         memberCount: Int
     )
 
-    // Fired when a verified assistant actually appears in the conversation's
-    // member list after a join was requested. `waitDuration` is the seconds
-    // the user spent watching the joining/verifying state.
+    // Terminal event for an assistant-join attempt after the user requested
+    // one. Fires at the stable join moment (assistant appears in the member
+    // list) or at the wait-window timeout. `isSuccess` distinguishes the two
+    // (the assistant backend gives up after about two minutes). `waitDuration`
+    // is the seconds spent in the joining/verifying state; `source` is the
+    // stable entry-point intent. `memberCount` is the joined conversation
+    // size, null on timeout.
     suspend fun assistantJoined(
         waitDuration: Float,
-        surface: AssistantJoinSurface,
-        memberCount: Int
-    )
-
-    // Fired when no verified assistant appeared within the join wait window
-    // (the assistant backend gives up after about two minutes).
-    suspend fun assistantJoinTimedOut(
-        waitDuration: Float,
-        surface: AssistantJoinSurface
+        source: AssistantJoinSource,
+        memberCount: Int?,
+        isSuccess: Boolean
     )
 
     // Fired when the client's join-request polling fallback processed an

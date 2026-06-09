@@ -9,19 +9,13 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         delegate?.sendEvent(name: Self.eventStartedConversation, properties: [:])
     }
 
-    public func joinedConversation(verificationDuration: Float, memberCount: Int, hasAssistant: Bool, source: ConversationSource) async {
+    public func joinedConversation(verificationDuration: Float, memberCount: Int?, hasAssistant: Bool?, source: ConversationSource, isSuccess: Bool) async {
         delegate?.sendEvent(name: Self.eventJoinedConversation, properties: [
             Self.paramVerificationDuration: verificationDuration,
             Self.paramMemberCount: memberCount,
             Self.paramHasAssistant: hasAssistant,
             Self.paramSource: source.metricsString,
-        ])
-    }
-
-    public func conversationJoinTimedOut(waitDuration: Float, source: ConversationSource) async {
-        delegate?.sendEvent(name: Self.eventConversationJoinTimedOut, properties: [
-            Self.paramWaitDuration: waitDuration,
-            Self.paramSource: source.metricsString,
+            Self.paramIsSuccess: isSuccess,
         ])
     }
 
@@ -38,18 +32,12 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
-    public func assistantJoined(waitDuration: Float, surface: AssistantJoinSurface, memberCount: Int) async {
+    public func assistantJoined(waitDuration: Float, source: AssistantJoinSource, memberCount: Int?, isSuccess: Bool) async {
         delegate?.sendEvent(name: Self.eventAssistantJoined, properties: [
             Self.paramWaitDuration: waitDuration,
-            Self.paramSurface: surface.metricsString,
+            Self.paramSource: source.metricsString,
             Self.paramMemberCount: memberCount,
-        ])
-    }
-
-    public func assistantJoinTimedOut(waitDuration: Float, surface: AssistantJoinSurface) async {
-        delegate?.sendEvent(name: Self.eventAssistantJoinTimedOut, properties: [
-            Self.paramWaitDuration: waitDuration,
-            Self.paramSurface: surface.metricsString,
+            Self.paramIsSuccess: isSuccess,
         ])
     }
 
@@ -138,11 +126,9 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
 
     public static let eventStartedConversation: String = "started_conversation"
     public static let eventJoinedConversation: String = "joined_conversation"
-    public static let eventConversationJoinTimedOut: String = "conversation_join_timed_out"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
     public static let eventAddedAssistant: String = "added_assistant"
     public static let eventAssistantJoined: String = "assistant_joined"
-    public static let eventAssistantJoinTimedOut: String = "assistant_join_timed_out"
     public static let eventAssistantJoinRescuedByPolling: String = "assistant_join_rescued_by_polling"
     public static let eventSentMessage: String = "sent_message"
     public static let eventSharedConversation: String = "shared_conversation"
@@ -156,14 +142,13 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramMemberCount: String = "member_count"
     public static let paramHasAssistant: String = "has_assistant"
     public static let paramSource: String = "source"
+    public static let paramIsSuccess: String = "is_success"
     public static let paramWaitDuration: String = "wait_duration"
-    public static let paramSurface: String = "surface"
     public static let paramStreamAgeSecs: String = "stream_age_secs"
     public static let paramPollTick: String = "poll_tick"
     public static let paramSendingTime: String = "sending_time"
     public static let paramAttachmentTypes: String = "attachment_types"
     public static let paramHasText: String = "has_text"
-    public static let paramIsSuccess: String = "is_success"
     public static let paramShareTarget: String = "share_target"
     public static let paramHasExpiration: String = "has_expiration"
     public static let paramExpiresAfterUse: String = "expires_after_use"

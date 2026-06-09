@@ -16,18 +16,18 @@ extension ConversationSource {
     }
 }
 
-public enum AssistantJoinSurface {
-    case statusMessage
-    case contactCard
-    case builderPlaceholder
+public enum AssistantJoinSource {
+    case addToConversation
+    case agentTemplate
+    case agentBuilder
 }
 
-extension AssistantJoinSurface {
+extension AssistantJoinSource {
     public var metricsString: String {
         switch self {
-        case .statusMessage: return "status_message"
-        case .contactCard: return "contact_card"
-        case .builderPlaceholder: return "builder_placeholder"
+        case .addToConversation: return "add_to_conversation"
+        case .agentTemplate: return "agent_template"
+        case .agentBuilder: return "agent_builder"
         }
     }
 }
