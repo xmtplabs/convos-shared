@@ -16,6 +16,22 @@ extension ConversationSource {
     }
 }
 
+public enum AssistantJoinSource {
+    case addToConversation
+    case agentTemplate
+    case agentBuilder
+}
+
+extension AssistantJoinSource {
+    public var metricsString: String {
+        switch self {
+        case .addToConversation: return "add_to_conversation"
+        case .agentTemplate: return "agent_template"
+        case .agentBuilder: return "agent_builder"
+        }
+    }
+}
+
 public enum ShareTarget {
     case messages
     case mail
