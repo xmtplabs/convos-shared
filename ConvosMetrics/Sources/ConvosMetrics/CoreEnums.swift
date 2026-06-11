@@ -1,4 +1,4 @@
-public enum ConversationSource {
+public enum ConversationSource: Sendable {
     case url
     case scan
     case paste
@@ -16,7 +16,7 @@ extension ConversationSource {
     }
 }
 
-public enum AssistantJoinSource {
+public enum AssistantJoinSource: Sendable {
     case addToConversation
     case agentTemplate
     case agentBuilder
@@ -32,7 +32,7 @@ extension AssistantJoinSource {
     }
 }
 
-public enum ShareTarget {
+public enum ShareTarget: Sendable {
     case messages
     case mail
     case copy
@@ -56,7 +56,7 @@ extension ShareTarget {
     }
 }
 
-public enum AgentBuilderEntryMode {
+public enum AgentBuilderEntryMode: Sendable {
     case composer
     case voiceMemo
 }
@@ -70,7 +70,7 @@ extension AgentBuilderEntryMode {
     }
 }
 
-public enum SubscriptionTier {
+public enum SubscriptionTier: Sendable {
     case builder
     case pro
 }
@@ -84,7 +84,7 @@ extension SubscriptionTier {
     }
 }
 
-public enum SubscriptionPeriod {
+public enum SubscriptionPeriod: Sendable {
     case monthly
     case annual
 }
@@ -110,7 +110,7 @@ extension PaywallSource {
     }
 }
 
-public enum PurchaseFailureReason {
+public enum PurchaseFailureReason: Sendable {
     case productNotFound
     case purchasePending
     case purchaseUnverified

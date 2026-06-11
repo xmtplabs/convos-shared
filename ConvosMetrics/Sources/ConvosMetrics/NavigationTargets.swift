@@ -9,7 +9,7 @@ public enum AgentBuilderEntryPoint {
     case sheet
 }
 
-public enum PaywallSource {
+public enum PaywallSource: Sendable {
     case settings
     case lowBalanceBanner
     case onboarding
