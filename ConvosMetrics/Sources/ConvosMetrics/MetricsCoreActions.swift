@@ -70,7 +70,7 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
-    public func builtAgent(buildDuration: Float, instructionCharCount: Int, instructionWordCount: Int, attachmentTypes: [String], hasVoiceMemo: Bool, voiceMemoDuration: Float, connectionTypes: [String], entryMode: AgentBuilderEntryMode, isSuccess: Bool) async {
+    public func builtAgent(buildDuration: Float, instructionCharCount: Int, instructionWordCount: Int, attachmentTypes: [String], hasVoiceMemo: Bool, voiceMemoDuration: Float, connectionTypes: [String], entryMode: AgentBuilderEntryMode, isSuccess: Bool, fromPromptHint: Bool, tapCount: Int) async {
         delegate?.sendEvent(name: Self.eventBuiltAgent, properties: [
             Self.paramBuildDuration: buildDuration,
             Self.paramInstructionCharCount: instructionCharCount,
@@ -81,6 +81,14 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
             Self.paramConnectionTypes: connectionTypes,
             Self.paramEntryMode: entryMode.metricsString,
             Self.paramIsSuccess: isSuccess,
+            Self.paramFromPromptHint: fromPromptHint,
+            Self.paramTapCount: tapCount,
+        ])
+    }
+
+    public func promptHintTapped(tapCount: Int) async {
+        delegate?.sendEvent(name: Self.eventPromptHintTapped, properties: [
+            Self.paramTapCount: tapCount,
         ])
     }
 
@@ -133,6 +141,7 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventSentMessage: String = "sent_message"
     public static let eventSharedConversation: String = "shared_conversation"
     public static let eventBuiltAgent: String = "built_agent"
+    public static let eventPromptHintTapped: String = "prompt_hint_tapped"
     public static let eventPurchaseInitiated: String = "purchase_initiated"
     public static let eventPurchaseSucceeded: String = "purchase_succeeded"
     public static let eventPurchaseCancelled: String = "purchase_cancelled"
@@ -159,6 +168,8 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramVoiceMemoDuration: String = "voice_memo_duration"
     public static let paramConnectionTypes: String = "connection_types"
     public static let paramEntryMode: String = "entry_mode"
+    public static let paramFromPromptHint: String = "from_prompt_hint"
+    public static let paramTapCount: String = "tap_count"
     public static let paramProductId: String = "product_id"
     public static let paramTier: String = "tier"
     public static let paramPeriod: String = "period"

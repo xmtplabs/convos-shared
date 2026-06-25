@@ -135,7 +135,13 @@ interface CoreActions {
         voiceMemoDuration: Float,
         connectionTypes: List<String>,
         entryMode: AgentBuilderEntryMode,
-        isSuccess: Boolean
+        isSuccess: Boolean,
+        fromPromptHint: Boolean,
+        tapCount: Int
+    )
+
+    suspend fun promptHintTapped(
+        tapCount: Int
     )
 
     suspend fun purchaseInitiated(
