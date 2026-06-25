@@ -81,7 +81,7 @@ class SwiftGenerator(
     private fun generateNavigationTargets(graph: NavigationGraph) {
         val code = buildString {
             for (enumType in graph.enumTypes) {
-                appendLine("public enum ${enumType.name} {")
+                appendLine("public enum ${enumType.name}: Sendable {")
                 for (value in enumType.values) {
                     appendLine("    case ${value.toSwiftEnumCase()}")
                 }
@@ -228,7 +228,7 @@ class SwiftGenerator(
                 if (index > 0) appendLine()
                 val alreadyDeclared = enumType.name in navigationEnumNames
                 if (!alreadyDeclared) {
-                    appendLine("public enum ${enumType.name} {")
+                    appendLine("public enum ${enumType.name}: Sendable {")
                     for (value in enumType.values) {
                         appendLine("    case ${value.name.toSwiftEnumCase()}")
                     }
