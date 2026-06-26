@@ -1,15 +1,15 @@
-public enum NewConversationMode {
+public enum NewConversationMode: Sendable {
     case create
     case scanner
     case joinInvite
 }
 
-public enum AgentBuilderEntryPoint {
+public enum AgentBuilderEntryPoint: Sendable {
     case inline
     case sheet
 }
 
-public enum PaywallSource {
+public enum PaywallSource: Sendable {
     case settings
     case lowBalanceBanner
     case onboarding
