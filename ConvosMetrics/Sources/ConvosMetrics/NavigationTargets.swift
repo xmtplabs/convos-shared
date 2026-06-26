@@ -1,15 +1,15 @@
-public enum NewConversationMode: Sendable {
+public enum NewConversationMode {
     case create
     case scanner
     case joinInvite
 }
 
-public enum AgentBuilderEntryPoint: Sendable {
+public enum AgentBuilderEntryPoint {
     case inline
     case sheet
 }
 
-public enum PaywallSource: Sendable {
+public enum PaywallSource {
     case settings
     case lowBalanceBanner
     case onboarding
@@ -235,10 +235,6 @@ public struct ConversationForkedInfoNavigatorArgs {
     }
 }
 
-public struct RevealMediaInfoNavigatorArgs {
-    public init() {}
-}
-
 public struct PhotosInfoNavigatorArgs {
     public init() {}
 }
@@ -391,7 +387,6 @@ public protocol ConversationNavigator: AnyObject {
     func present(lockedConvoInfo: LockedConvoInfoNavigatorArgs)
     func present(fullConvoInfo: FullConvoInfoNavigatorArgs)
     func present(conversationForkedInfo: ConversationForkedInfoNavigatorArgs)
-    func present(revealMediaInfo: RevealMediaInfoNavigatorArgs)
     func present(photosInfo: PhotosInfoNavigatorArgs)
     func present(assistantConfirmation: AssistantConfirmationNavigatorArgs)
     func present(agentInfo: AgentInfoNavigatorArgs)
@@ -561,10 +556,6 @@ public protocol FullConvoInfoNavigator: AnyObject {
 }
 
 public protocol ConversationForkedInfoNavigator: AnyObject {
-    func closed(context: ScreenContext)
-}
-
-public protocol RevealMediaInfoNavigator: AnyObject {
     func closed(context: ScreenContext)
 }
 

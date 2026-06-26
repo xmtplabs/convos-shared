@@ -156,11 +156,6 @@ public class ConversationCollector: ConversationNavigator {
         instance?.present(conversationForkedInfo: conversationForkedInfo)
     }
 
-    public func present(revealMediaInfo: RevealMediaInfoNavigatorArgs) {
-        delegate?.presented(source: Self.name, target: RevealMediaInfoCollector.name)
-        instance?.present(revealMediaInfo: revealMediaInfo)
-    }
-
     public func present(photosInfo: PhotosInfoNavigatorArgs) {
         delegate?.presented(source: Self.name, target: PhotosInfoCollector.name)
         instance?.present(photosInfo: photosInfo)
@@ -916,23 +911,6 @@ public class ConversationForkedInfoCollector: ConversationForkedInfoNavigator {
     }
 
     public static let name: String = "conversation_forked_info"
-}
-
-public class RevealMediaInfoCollector: RevealMediaInfoNavigator {
-    private weak var instance: RevealMediaInfoNavigator?
-    private weak var delegate: CollectorDelegate?
-
-    public init(instance: RevealMediaInfoNavigator, delegate: CollectorDelegate) {
-        self.instance = instance
-        self.delegate = delegate
-    }
-
-    public func closed(context: ScreenContext) {
-        delegate?.closed(screen: Self.name, context: context)
-        instance?.closed(context: context)
-    }
-
-    public static let name: String = "reveal_media_info"
 }
 
 public class PhotosInfoCollector: PhotosInfoNavigator {
