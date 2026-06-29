@@ -38,7 +38,6 @@ digraph navigators {
     "locked_convo_info";
     "full_convo_info";
     "conversation_forked_info";
-    "reveal_media_info";
     "photos_info";
     "assistant_confirmation";
     "agent_info";
@@ -84,7 +83,6 @@ digraph navigators {
     "conversation" -> "locked_convo_info" [color=blue, style=dashed];
     "conversation" -> "full_convo_info" [color=blue, style=dashed];
     "conversation" -> "conversation_forked_info" [color=blue, style=dashed];
-    "conversation" -> "reveal_media_info" [color=blue, style=dashed];
     "conversation" -> "photos_info" [color=blue, style=dashed];
     "conversation" -> "assistant_confirmation" [color=blue, style=dashed];
     "conversation" -> "agent_info" [color=blue, style=dashed];

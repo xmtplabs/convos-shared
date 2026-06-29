@@ -79,7 +79,7 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 |--------|------|----------|
 | `tab_root` | _none_ | navigateTo → `Conversations`<br>navigateTo → `StuffOverview`<br>navigateTo → `Contacts` |
 | `conversations` | _none_ | navigateTo → `Conversation`<br>present → `AppSettings`<br>present → `NewConversation`<br>present → `ExplodeConfirmation`<br>present → `ConnectionGrant`<br>present → `ExplodeInfo`<br>present → `PinLimitInfo`<br>present → `ContactCard`<br>present → `AgentBuilder` |
-| `conversation` | `conversationId`: String | present → `Paywall`<br>present → `ConversationInfo`<br>present → `MyInfo`<br>present → `MemberProfile`<br>present → `ShareInvite`<br>present → `NewConversation`<br>present → `Reactions`<br>present → `ExplodeInfo`<br>present → `LockedConvoInfo`<br>present → `FullConvoInfo`<br>present → `ConversationForkedInfo`<br>present → `RevealMediaInfo`<br>present → `PhotosInfo`<br>present → `AssistantConfirmation`<br>present → `AgentInfo`<br>present → `AgentPowerInfo`<br>present → `ExplodedInviteInfo`<br>present → `SetupProfile`<br>present → `InviteAccepted`<br>present → `RequestPushNotifications`<br>present → `BackwardsSecrecyInfo`<br>present → `AddMembers`<br>present → `ContactCard`<br>present → `AgentTemplateContactCard`<br>present → `AgentBuilder`<br>present → `ThinkingDetail`<br>present → `AttachmentPreview` |
+| `conversation` | `conversationId`: String | present → `Paywall`<br>present → `ConversationInfo`<br>present → `MyInfo`<br>present → `MemberProfile`<br>present → `ShareInvite`<br>present → `NewConversation`<br>present → `Reactions`<br>present → `ExplodeInfo`<br>present → `LockedConvoInfo`<br>present → `FullConvoInfo`<br>present → `ConversationForkedInfo`<br>present → `PhotosInfo`<br>present → `AssistantConfirmation`<br>present → `AgentInfo`<br>present → `AgentPowerInfo`<br>present → `ExplodedInviteInfo`<br>present → `SetupProfile`<br>present → `InviteAccepted`<br>present → `RequestPushNotifications`<br>present → `BackwardsSecrecyInfo`<br>present → `AddMembers`<br>present → `ContactCard`<br>present → `AgentTemplateContactCard`<br>present → `AgentBuilder`<br>present → `ThinkingDetail`<br>present → `AttachmentPreview` |
 | `stuff_overview` | _none_ | navigateTo → `StuffDetail`<br>present → `AppSettings`<br>present → `NewConversation`<br>present → `AgentBuilder` |
 | `stuff_detail` | `itemId`: String<br>`conversationId`: String? | _leaf_ |
 | `app_settings` | _none_ | navigateTo → `MyInfo`<br>navigateTo → `CustomizeSettings`<br>navigateTo → `AssistantSettings`<br>navigateTo → `Connections`<br>navigateTo → `BackupRestore`<br>navigateTo → `DeleteAllData`<br>navigateTo → `Devices`<br>present → `Paywall` |
@@ -112,7 +112,6 @@ Graph source: [`navigators.dot`](navigators.dot). `navigators.png` is re-rendere
 | `locked_convo_info` | `conversationId`: String | present → `LockConvoConfirmation` |
 | `full_convo_info` | _none_ | _leaf_ |
 | `conversation_forked_info` | `conversationId`: String | _leaf_ |
-| `reveal_media_info` | _none_ | _leaf_ |
 | `photos_info` | _none_ | _leaf_ |
 | `assistant_confirmation` | `conversationId`: String | _leaf_ |
 | `agent_info` | _none_ | _leaf_ |

@@ -47,7 +47,6 @@ interface ConversationNavigator {
     fun present(lockedConvoInfo: LockedConvoInfoNavigator.Args)
     fun present(fullConvoInfo: FullConvoInfoNavigator.Args)
     fun present(conversationForkedInfo: ConversationForkedInfoNavigator.Args)
-    fun present(revealMediaInfo: RevealMediaInfoNavigator.Args)
     fun present(photosInfo: PhotosInfoNavigator.Args)
     fun present(assistantConfirmation: AssistantConfirmationNavigator.Args)
     fun present(agentInfo: AgentInfoNavigator.Args)
@@ -359,13 +358,6 @@ interface FullConvoInfoNavigator {
 @NavigationTarget
 interface ConversationForkedInfoNavigator {
     data class Args(val conversationId: String)
-
-    fun closed(context: ScreenContext)
-}
-
-@NavigationTarget
-interface RevealMediaInfoNavigator {
-    class Args
 
     fun closed(context: ScreenContext)
 }
