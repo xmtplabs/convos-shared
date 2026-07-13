@@ -132,6 +132,28 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         ])
     }
 
+    public func devicePairingStarted(role: DevicePairingRole) async {
+        delegate?.sendEvent(name: Self.eventDevicePairingStarted, properties: [
+            Self.paramRole: role.metricsString,
+        ])
+    }
+
+    public func devicePairingCompleted(role: DevicePairingRole, durationSecs: Float) async {
+        delegate?.sendEvent(name: Self.eventDevicePairingCompleted, properties: [
+            Self.paramRole: role.metricsString,
+            Self.paramDurationSecs: durationSecs,
+        ])
+    }
+
+    public func devicePairingFailed(role: DevicePairingRole, reason: DevicePairingFailureReason, step: DevicePairingStep, durationSecs: Float) async {
+        delegate?.sendEvent(name: Self.eventDevicePairingFailed, properties: [
+            Self.paramRole: role.metricsString,
+            Self.paramReason: reason.metricsString,
+            Self.paramStep: step.metricsString,
+            Self.paramDurationSecs: durationSecs,
+        ])
+    }
+
     public static let eventStartedConversation: String = "started_conversation"
     public static let eventJoinedConversation: String = "joined_conversation"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
@@ -147,6 +169,9 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventPurchaseCancelled: String = "purchase_cancelled"
     public static let eventPurchaseFailed: String = "purchase_failed"
     public static let eventPurchasesRestored: String = "purchases_restored"
+    public static let eventDevicePairingStarted: String = "device_pairing_started"
+    public static let eventDevicePairingCompleted: String = "device_pairing_completed"
+    public static let eventDevicePairingFailed: String = "device_pairing_failed"
     public static let paramVerificationDuration: String = "verification_duration"
     public static let paramMemberCount: String = "member_count"
     public static let paramHasAssistant: String = "has_assistant"
@@ -176,4 +201,6 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let paramDurationSecs: String = "duration_secs"
     public static let paramReason: String = "reason"
     public static let paramRestoredCount: String = "restored_count"
+    public static let paramRole: String = "role"
+    public static let paramStep: String = "step"
 }
