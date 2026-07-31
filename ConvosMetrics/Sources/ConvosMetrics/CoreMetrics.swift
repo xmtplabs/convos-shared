@@ -25,6 +25,7 @@ public final class CoreMetrics: @unchecked Sendable {
             Self.userPropertyConversationCount24Hours: properties.conversationCount24Hours,
             Self.userPropertyConversationCount7Days: properties.conversationCount7Days,
             Self.userPropertyMaxActiveConvoAge: properties.maxActiveConvoAge,
+            Self.userPropertyAccountId: properties.accountId,
         ])
     }
 
@@ -36,4 +37,5 @@ public final class CoreMetrics: @unchecked Sendable {
     public static let userPropertyConversationCount24Hours: String = "conversation_count24_hours"
     public static let userPropertyConversationCount7Days: String = "conversation_count7_days"
     public static let userPropertyMaxActiveConvoAge: String = "max_active_convo_age"
+    public static let userPropertyAccountId: String = "account_id"
 }

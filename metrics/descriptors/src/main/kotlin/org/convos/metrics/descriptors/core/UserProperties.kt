@@ -11,5 +11,6 @@ data class UserProperties(
     val assistantConversationCount: Int = 0,
     val conversationCount24Hours: Int = 0,
     val conversationCount7Days: Int = 0,
-    val maxActiveConvoAge: Float = 0f, // seconds
+    val maxActiveConvoAge: Float = 0f, // seconds,
+    val accountId: String? = null,
 )

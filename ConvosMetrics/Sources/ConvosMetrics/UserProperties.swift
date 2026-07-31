@@ -7,6 +7,7 @@ public struct UserProperties: Sendable {
     public let conversationCount24Hours: Int
     public let conversationCount7Days: Int
     public let maxActiveConvoAge: Float
+    public let accountId: String?
 
     public init(
         hasMessagedAssistant: Bool,
@@ -16,7 +17,8 @@ public struct UserProperties: Sendable {
         assistantConversationCount: Int,
         conversationCount24Hours: Int,
         conversationCount7Days: Int,
-        maxActiveConvoAge: Float
+        maxActiveConvoAge: Float,
+        accountId: String? = nil
     ) {
         self.hasMessagedAssistant = hasMessagedAssistant
         self.lastAssistantMessageTimestamp = lastAssistantMessageTimestamp
@@ -26,5 +28,6 @@ public struct UserProperties: Sendable {
         self.conversationCount24Hours = conversationCount24Hours
         self.conversationCount7Days = conversationCount7Days
         self.maxActiveConvoAge = maxActiveConvoAge
+        self.accountId = accountId
     }
 }
