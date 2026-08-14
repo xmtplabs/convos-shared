@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # convos-shared pre-commit hook.
 #
-# Runs the metrics Gradle build (which regenerates the Swift package into
-# <repo>/ConvosMetrics/ and splices the metrics catalog into <repo>/README.md),
-# then aborts the commit if the working tree has uncommitted regenerated files.
+# Runs the metrics and bridge Gradle builds (which regenerate the Swift
+# packages into <repo>/ConvosMetrics/ and <repo>/ConvosBridge/, the JS facade
+# at <repo>/web/convos.js, and splice the metrics catalog into
+# <repo>/README.md), then aborts the commit if the working tree has
+# uncommitted regenerated files.
 #
 # Install: ./scripts/install-hooks.sh
 
@@ -15,10 +17,15 @@ cd "$repo_root"
 echo "[pre-commit] Running metrics build (regenerates Swift package + README)..."
 (cd metrics && ./gradlew --quiet build)
 
-# Paths the build can modify. Anything that ends up dirty here must be staged
+echo "[pre-commit] Running bridge build (regenerates ConvosBridge + web/convos.js)..."
+(cd bridge && ./gradlew --quiet build)
+
+# Paths the builds can modify. Anything that ends up dirty here must be staged
 # before the commit is allowed through.
 generated_paths=(
     "ConvosMetrics"
+    "ConvosBridge"
+    "web"
     "README.md"
     "navigators.dot"
     "navigators.png"

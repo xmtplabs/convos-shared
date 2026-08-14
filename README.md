@@ -5,7 +5,12 @@ Cross-platform shared artifacts that back the Convos iOS and Android clients.
 ## Layout
 
 - `metrics/` — Kotlin Gradle project. Declares metrics descriptors (events, user properties, navigation graph) and runs KSP codegen against them.
-- `ConvosMetrics/` — generated Swift Package, mirrored out of the KSP build so iOS can consume it as an SPM dependency. **Do not hand-edit.** Re-run `./gradlew build` inside `metrics/` to regenerate.
+- `bridge/` — Kotlin Gradle project. Declares the WebView JS bridge surface (`@BridgePlugin` interfaces under `bridge/plugins/`) and runs KSP codegen against it, producing Kotlin handlers, the ConvosBridge Swift package, and `web/convos.js`. Also contains the hand-written Android `ConvosWebBridge` runtime (`bridge/runtime-android/`) and an Android demo app (`bridge/demo-android/`).
+- `ConvosMetrics/` — generated Swift Package target, mirrored out of the KSP build so iOS can consume it as an SPM dependency. **Do not hand-edit.** Re-run `./gradlew build` inside `metrics/` to regenerate.
+- `ConvosBridge/` — generated Swift Package target (plugin protocols, dispatchers, and the `ConvosWebBridge` WKWebView runtime). **Do not hand-edit.** Re-run `./gradlew build` inside `bridge/` to regenerate.
+- `web/convos.js` — generated JavaScript facade (`window.convos`) over the native bridge. **Do not hand-edit**; regenerate with the bridge build.
+- `Package.swift` — hand-written SPM manifest exposing both the `ConvosMetrics` and `ConvosBridge` library products.
+- `demo-ios/` — XcodeGen demo app that wires `ConvosBridge` into a `WKWebView` (`cd demo-ios && xcodegen generate` after changing `project.yml`).
 - `docs/` — protocol notes.
 - `.githooks/` — shared git hooks. Install once with `./scripts/install-hooks.sh`.
 
@@ -18,9 +23,16 @@ cd metrics
 
 This runs KSP, regenerates the Swift package into `<repo>/ConvosMetrics/`, and splices the metrics catalog below into this README.
 
+```sh
+cd bridge
+./gradlew build
+```
+
+This runs KSP over the `@BridgePlugin` interfaces and regenerates `<repo>/ConvosBridge/` and `<repo>/web/convos.js`. Building the demo apps: `./gradlew :demo-android:assembleDebug` inside `bridge/`, and `demo-ios/ConvosBridgeDemo.xcodeproj` for iOS.
+
 ## Pre-commit
 
-A pre-commit hook runs `./gradlew build` and aborts the commit if the regenerated Swift package or this README differ from what's staged. Activate it once per clone with:
+A pre-commit hook runs both Gradle builds and aborts the commit if the regenerated artifacts (Swift packages, `web/convos.js`, or this README) differ from what's staged. Activate it once per clone with:
 
 ```sh
 ./scripts/install-hooks.sh

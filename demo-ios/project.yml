@@ -1,0 +1,30 @@
+# XcodeGen manifest for the ConvosBridge iOS demo app.
+# Regenerate the .xcodeproj with: cd demo-ios && xcodegen generate
+name: ConvosBridgeDemo
+options:
+  bundleIdPrefix: org.convos
+  deploymentTarget:
+    iOS: "16.0"
+packages:
+  ConvosShared:
+    path: ..
+targets:
+  ConvosBridgeDemo:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      # The demo page is shared with demo-android. convos.js is not bundled here:
+      # the ConvosBridge package injects it as a document-start user script.
+      - path: ../bridge/demo-shared/index.html
+        buildPhase: resources
+    dependencies:
+      - package: ConvosShared
+        product: ConvosBridge
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Bridge Demo
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "1.0"
