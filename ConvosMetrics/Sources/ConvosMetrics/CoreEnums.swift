@@ -131,3 +131,57 @@ extension PurchaseFailureReason {
         }
     }
 }
+
+public enum DevicePairingRole: Sendable {
+    case initiator
+    case joiner
+}
+
+extension DevicePairingRole {
+    public var metricsString: String {
+        switch self {
+        case .initiator: return "initiator"
+        case .joiner: return "joiner"
+        }
+    }
+}
+
+public enum DevicePairingFailureReason: Sendable {
+    case error
+    case expired
+    case cancelled
+}
+
+extension DevicePairingFailureReason {
+    public var metricsString: String {
+        switch self {
+        case .error: return "error"
+        case .expired: return "expired"
+        case .cancelled: return "cancelled"
+        }
+    }
+}
+
+public enum DevicePairingStep: Sendable {
+    case qrDisplayed
+    case joinRequested
+    case dataDeletion
+    case pinShown
+    case pinEntry
+    case emojiConfirmation
+    case syncing
+}
+
+extension DevicePairingStep {
+    public var metricsString: String {
+        switch self {
+        case .qrDisplayed: return "qr_displayed"
+        case .joinRequested: return "join_requested"
+        case .dataDeletion: return "data_deletion"
+        case .pinShown: return "pin_shown"
+        case .pinEntry: return "pin_entry"
+        case .emojiConfirmation: return "emoji_confirmation"
+        case .syncing: return "syncing"
+        }
+    }
+}

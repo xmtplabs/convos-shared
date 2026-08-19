@@ -44,6 +44,45 @@ enum class PurchaseFailureReason {
     UNKNOWN,
 }
 
+// Which side of a device-pairing handshake this device is: the signed-in
+// device that displays the QR code and approves (INITIATOR), or the new
+// device that scanned it and is being added to the inbox (JOINER). Each side
+// emits its own started/completed/failed events, so a fully successful pair
+// produces one completed event per role.
+enum class DevicePairingRole {
+    INITIATOR,
+    JOINER,
+}
+
+// The phase of the pairing handshake, used to locate where a failed attempt
+// died. Ordered by flow progression; some steps only occur for one role.
+enum class DevicePairingStep {
+    // Initiator: QR code displayed, waiting for the joiner to scan.
+    QR_DISPLAYED,
+    // Joiner: join request sent, waiting for the initiator to respond.
+    JOIN_REQUESTED,
+    // Joiner: blocked on the erase-existing-data confirmation.
+    DATA_DELETION,
+    // Initiator: PIN displayed, waiting for the joiner to type it.
+    PIN_SHOWN,
+    // Joiner: typing the PIN.
+    PIN_ENTRY,
+    // Both: comparing emoji fingerprints, waiting for initiator confirm.
+    EMOJI_CONFIRMATION,
+    // Both: identity share in flight / being adopted.
+    SYNCING,
+}
+
+enum class DevicePairingFailureReason {
+    // The handshake errored (transport failure, wrong PIN exhausted,
+    // identity-share verification failure, ...).
+    ERROR,
+    // A phase timer expired before the other device responded.
+    EXPIRED,
+    // The user dismissed the flow.
+    CANCELLED,
+}
+
 // How the user initiated an assistant join - the stable entry-point intent,
 // captured at request time and carried through to the join moment. Defined by
 // intent (not by the UI surface it happens to render on) so the metric stays
@@ -171,4 +210,30 @@ interface CoreActions {
     )
 
     suspend fun purchasesRestored(restoredCount: Int)
+
+    // Fired when a device-pairing attempt begins on this device: the
+    // initiator presenting the QR sheet, or the joiner accepting a pairing
+    // deep link. Pairs with exactly one devicePairingCompleted /
+    // devicePairingFailed terminal event per attempt.
+    suspend fun devicePairingStarted(
+        role: DevicePairingRole
+    )
+
+    // Terminal success event for a device-pairing attempt. `durationSecs` is
+    // the time since devicePairingStarted on the same device.
+    suspend fun devicePairingCompleted(
+        role: DevicePairingRole,
+        durationSecs: Float
+    )
+
+    // Terminal failure event for a device-pairing attempt. `reason`
+    // distinguishes breakage (ERROR) from timeout (EXPIRED) and user
+    // abandonment (CANCELLED); `step` is the phase the flow was in when it
+    // died, and `durationSecs` the time since devicePairingStarted.
+    suspend fun devicePairingFailed(
+        role: DevicePairingRole,
+        reason: DevicePairingFailureReason,
+        step: DevicePairingStep,
+        durationSecs: Float
+    )
 }

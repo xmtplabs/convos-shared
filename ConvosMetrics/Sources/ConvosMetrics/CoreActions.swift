@@ -14,4 +14,7 @@ public protocol CoreActions: AnyObject, Sendable {
     func purchaseCancelled(productId: String, source: PaywallSource) async
     func purchaseFailed(productId: String, source: PaywallSource, reason: PurchaseFailureReason) async
     func purchasesRestored(restoredCount: Int) async
+    func devicePairingStarted(role: DevicePairingRole) async
+    func devicePairingCompleted(role: DevicePairingRole, durationSecs: Float) async
+    func devicePairingFailed(role: DevicePairingRole, reason: DevicePairingFailureReason, step: DevicePairingStep, durationSecs: Float) async
 }
