@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convos Bridge Demo</title>
+<style>
+  body { font-family: -apple-system, Roboto, sans-serif; margin: 16px; }
+  button { font-size: 16px; padding: 10px 20px; }
+  pre { background: #f2f2f2; padding: 12px; border-radius: 6px;
+        white-space: pre-wrap; word-break: break-word; font-size: 13px; }
+</style>
+<!-- window.convos is injected by the native runtime as a document-start user
+     script before this page loads; no <script src="convos.js"> is needed. -->
+</head>
+<body>
+<h1>Convos Bridge Demo</h1>
+<button onclick="runAll()">Run all</button>
+<pre id="log"></pre>
+<script>
+const log = (message) => {
+  document.getElementById("log").textContent += message + "\n";
+};
+
+window.convos.onReady();
+log("bridge: onReady sent");
+
+async function runAll() {
+  document.getElementById("log").textContent = "";
+  try {
+    log("getMemberInboxId → " + await window.convos.getMemberInboxId());
+    log("getProfile → " + JSON.stringify(await window.convos.getProfile("inbox-123")));
+    await window.convos.setRole("inbox-123", "ADMIN");
+    log("setRole → ok");
+    log("listMembers → " + JSON.stringify(await window.convos.listMembers(3)));
+    window.convos.trackEvent("demo_run_all");
+    log("trackEvent → sent (fire-and-forget)");
+    try {
+      await window.convos.getProfile("explode");
+      log("error demo → UNEXPECTED SUCCESS");
+    } catch (e) {
+      log("error demo → " + e.code + ": " + e.message);
+    }
+    log("done ✓");
+  } catch (e) {
+    log("FAILED → " + (e.code || "") + " " + e.message);
+  }
+}
+</script>
+</body>
+</html>

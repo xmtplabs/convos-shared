@@ -1,0 +1,374 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01686919EDF7D00FCDFEC2E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220DD572B51C69CA2B445AB3 /* AppDelegate.swift */; };
+		31F36CA0C93E1D6088598CB1 /* convos.js in Resources */ = {isa = PBXBuildFile; fileRef = 10AB401597DCCB1BDA4F4531 /* convos.js */; };
+		5822CE3FC287F3E233CA03EF /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 90EB9E79DEDCFA123ECD1BF2 /* index.html */; };
+		69465001BC52E21EF1F11B93 /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0F76C2901AA4A24628F8F6 /* Stubs.swift */; };
+		6AD392C5274046B3F5E038C9 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C725ED2A0B2071A57F23C10 /* WebViewController.swift */; };
+		E1CCDBA3BA171E2EC47ED4C9 /* ConvosBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 0B268AF9ED5907310DFB530B /* ConvosBridge */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		10AB401597DCCB1BDA4F4531 /* convos.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = convos.js; sourceTree = "<group>"; };
+		220DD572B51C69CA2B445AB3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3C7C7710B33342CA442F03CA /* convos-shared */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "convos-shared"; path = ..; sourceTree = SOURCE_ROOT; };
+		6F0F76C2901AA4A24628F8F6 /* Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
+		8C725ED2A0B2071A57F23C10 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		90EB9E79DEDCFA123ECD1BF2 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		D182CB428B6598BCA84A542B /* ConvosBridgeDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ConvosBridgeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F9448CF12D14753AE9311885 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1CCDBA3BA171E2EC47ED4C9 /* ConvosBridge in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		368290F03084D15540AB2DE0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				220DD572B51C69CA2B445AB3 /* AppDelegate.swift */,
+				6F0F76C2901AA4A24628F8F6 /* Stubs.swift */,
+				8C725ED2A0B2071A57F23C10 /* WebViewController.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		4E5F496CFE5E7575EF0BABB2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D182CB428B6598BCA84A542B /* ConvosBridgeDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5AE2EBDC01BE8CA3B46F8BAD /* demo-shared */ = {
+			isa = PBXGroup;
+			children = (
+				90EB9E79DEDCFA123ECD1BF2 /* index.html */,
+			);
+			name = "demo-shared";
+			path = "../bridge/demo-shared";
+			sourceTree = "<group>";
+		};
+		7FE26C305C22405C6ADC005B = {
+			isa = PBXGroup;
+			children = (
+				5AE2EBDC01BE8CA3B46F8BAD /* demo-shared */,
+				8D77EBDFA9BFC32543B7971C /* Packages */,
+				368290F03084D15540AB2DE0 /* Sources */,
+				F0C7C1AC7E70B417BD051368 /* web */,
+				4E5F496CFE5E7575EF0BABB2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8D77EBDFA9BFC32543B7971C /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				3C7C7710B33342CA442F03CA /* convos-shared */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		F0C7C1AC7E70B417BD051368 /* web */ = {
+			isa = PBXGroup;
+			children = (
+				10AB401597DCCB1BDA4F4531 /* convos.js */,
+			);
+			name = web;
+			path = ../web;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5F47B978A5913DB21EC4E0DB /* ConvosBridgeDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54796CE48A4F7C04D36FD31F /* Build configuration list for PBXNativeTarget "ConvosBridgeDemo" */;
+			buildPhases = (
+				23419A45EBB035A69423DEA7 /* Sources */,
+				469557A4CD450051158A96F1 /* Resources */,
+				F9448CF12D14753AE9311885 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ConvosBridgeDemo;
+			packageProductDependencies = (
+				0B268AF9ED5907310DFB530B /* ConvosBridge */,
+			);
+			productName = ConvosBridgeDemo;
+			productReference = D182CB428B6598BCA84A542B /* ConvosBridgeDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AF99761C5DF4B2C65899950D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 07AD3F25D667E3BED8BEBCB3 /* Build configuration list for PBXProject "ConvosBridgeDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7FE26C305C22405C6ADC005B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FAADB336801658D8A96744CE /* XCLocalSwiftPackageReference ".." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4E5F496CFE5E7575EF0BABB2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5F47B978A5913DB21EC4E0DB /* ConvosBridgeDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		469557A4CD450051158A96F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31F36CA0C93E1D6088598CB1 /* convos.js in Resources */,
+				5822CE3FC287F3E233CA03EF /* index.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		23419A45EBB035A69423DEA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01686919EDF7D00FCDFEC2E5 /* AppDelegate.swift in Sources */,
+				69465001BC52E21EF1F11B93 /* Stubs.swift in Sources */,
+				6AD392C5274046B3F5E038C9 /* WebViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		118BA620FF88BC271FF89354 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bridge Demo";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.convos.ConvosBridgeDemo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		84616BA22FBE8AFADC75BC86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		854A061C116B048E222A5674 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bridge Demo";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.convos.ConvosBridgeDemo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		85D747F860FED42F715ABC4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07AD3F25D667E3BED8BEBCB3 /* Build configuration list for PBXProject "ConvosBridgeDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85D747F860FED42F715ABC4D /* Debug */,
+				84616BA22FBE8AFADC75BC86 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		54796CE48A4F7C04D36FD31F /* Build configuration list for PBXNativeTarget "ConvosBridgeDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				118BA620FF88BC271FF89354 /* Debug */,
+				854A061C116B048E222A5674 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		FAADB336801658D8A96744CE /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B268AF9ED5907310DFB530B /* ConvosBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ConvosBridge;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AF99761C5DF4B2C65899950D /* Project object */;
+}

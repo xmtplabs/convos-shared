@@ -16,7 +16,6 @@ dependencies {
 val repoRoot: java.io.File = rootProject.projectDir.parentFile
 
 val generatedSwiftDir = layout.buildDirectory.dir("generated/ksp/main/resources/swift")
-val generatedManifestFile = layout.buildDirectory.file("generated/ksp/main/resources/swiftpackage/Package.swift")
 val generatedMetricsMd = layout.buildDirectory.file("generated/ksp/main/resources/metrics.md")
 val generatedNavigatorsDot = layout.buildDirectory.file("generated/ksp/main/resources/navigators.dot")
 val swiftPackageOutDir = repoRoot.resolve("ConvosMetrics")
@@ -30,19 +29,6 @@ val syncSwiftPackage = tasks.register<Sync>("syncSwiftPackage") {
     dependsOn("kspKotlin")
     from(generatedSwiftDir)
     into(swiftPackageOutDir)
-}
-
-val syncSwiftManifest = tasks.register("syncSwiftManifest") {
-    group = "convos"
-    description = "Copies the KSP-generated Package.swift manifest to <repoRoot>/Package.swift."
-    dependsOn("kspKotlin")
-    val manifestProvider = generatedManifestFile
-    val manifestOut = repoRoot.resolve("Package.swift")
-    inputs.file(manifestProvider)
-    outputs.file(manifestOut)
-    doLast {
-        manifestOut.writeText(manifestProvider.get().asFile.readText())
-    }
 }
 
 val syncReadmeMetrics = tasks.register("syncReadmeMetrics") {
@@ -119,7 +105,7 @@ val syncNavigatorsGraph = tasks.register("syncNavigatorsGraph") {
 tasks.register("syncGeneratedArtifacts") {
     group = "convos"
     description = "Runs all generated-artifact sync steps (Swift package + README + navigator graph)."
-    dependsOn(syncSwiftPackage, syncSwiftManifest, syncReadmeMetrics, syncNavigatorsGraph)
+    dependsOn(syncSwiftPackage, syncReadmeMetrics, syncNavigatorsGraph)
 }
 
 tasks.named("build") {
