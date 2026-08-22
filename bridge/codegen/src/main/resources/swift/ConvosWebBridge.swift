@@ -54,20 +54,29 @@ public final class ConvosWebBridge: NSObject, WKScriptMessageHandler {
         let controller = webView.configuration.userContentController
         // Install `window.convos` before any page script runs, so pages can use
         // the bridge from their first inline `<script>` without loading it.
-        if let source = Self.convosScriptSource {
-            controller.addUserScript(
-                WKUserScript(
-                    source: source,
-                    injectionTime: .atDocumentStart,
-                    forMainFrameOnly: true
-                )
-            )
+        if let script = Self.bootstrapUserScript {
+            controller.addUserScript(script)
         }
         controller.add(
             WeakScriptMessageHandler(self),
             name: Self.messageHandlerName
         )
         self.webView = webView
+    }
+
+    /// The `window.convos` bootstrap (`convos.js`) as a document-start user
+    /// script. `attach(to:)` installs it for the common case. A host that
+    /// clears and reinstalls its own user scripts on every load - a pooled web
+    /// view, say - must reinstall this one alongside them, or `window.convos`
+    /// survives only until the next clear. Nil only if the bundled `convos.js`
+    /// resource is missing.
+    public static var bootstrapUserScript: WKUserScript? {
+        guard let source = Self.convosScriptSource else { return nil }
+        return WKUserScript(
+            source: source,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        )
     }
 
     /// The generated `convos.js`, bundled as a resource of this package.
