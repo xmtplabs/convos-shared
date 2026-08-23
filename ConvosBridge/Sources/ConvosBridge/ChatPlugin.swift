@@ -2,6 +2,7 @@
 
 public protocol ChatPlugin: AnyObject {
     func showMembersList()
+    func showAgentDm()
     func getAgentStatus() async throws -> AgentStatus
     func requestAgentJoin()
     func onAgentStatusChanged() -> AsyncStream<AgentStatus>
@@ -19,6 +20,9 @@ public final class ChatPluginDispatcher: BridgePluginDispatcher {
         switch method {
         case "showMembersList":
             impl.showMembersList()
+            return nil
+        case "showAgentDm":
+            impl.showAgentDm()
             return nil
         case "getAgentStatus":
             return try BridgeJSON.encodeResult(try await impl.getAgentStatus())

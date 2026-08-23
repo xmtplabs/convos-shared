@@ -43,6 +43,10 @@ class DemoChat : ChatPlugin {
         Log.i(TAG, "showMembersList")
     }
 
+    override fun showAgentDm() {
+        Log.i(TAG, "showAgentDm")
+    }
+
     override suspend fun getAgentStatus(): AgentStatus = status.value
 
     override fun requestAgentJoin() {

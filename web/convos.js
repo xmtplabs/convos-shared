@@ -126,6 +126,8 @@ class Convos {
   // ── chat ───────────────────────────────────────────────────
   /** Fire-and-forget. @returns {void} */
   showMembersList() { this._notify("chat.showMembersList", {}); }
+  /** Fire-and-forget. @returns {void} */
+  showAgentDm() { this._notify("chat.showAgentDm", {}); }
   /** @returns {Promise<AgentStatus>} */
   getAgentStatus() { return this._call("chat.getAgentStatus", {}); }
   /** Fire-and-forget. @returns {void} */

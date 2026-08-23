@@ -54,6 +54,7 @@ class BridgeRoundTripTest {
         var failure: Throwable? = null
 
         override fun showMembersList() = Unit
+        override fun showAgentDm() = Unit
         override suspend fun getAgentStatus(): AgentStatus = failure?.let { throw it } ?: status.value
         override fun requestAgentJoin() {
             status.value = AgentStatus(AgentState.JOINING, 0.0)

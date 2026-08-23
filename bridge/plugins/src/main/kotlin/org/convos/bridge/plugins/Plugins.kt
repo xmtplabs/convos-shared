@@ -52,6 +52,8 @@ interface InvitePlugin {
 interface ChatPlugin {
     fun showMembersList()
 
+    fun showAgentDm()
+
     /** Current agent membership status for the active conversation. */
     suspend fun getAgentStatus(): AgentStatus
 
