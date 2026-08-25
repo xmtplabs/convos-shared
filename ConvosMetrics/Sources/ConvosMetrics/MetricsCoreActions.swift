@@ -9,20 +9,30 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
         delegate?.sendEvent(name: Self.eventStartedConversation, properties: [:])
     }
 
-    public func joinedConversation(verificationDuration: Float, memberCount: Int?, hasAssistant: Bool?, source: ConversationSource, isSuccess: Bool) async {
+    public func joinAttemptStarted(source: ConversationSource) async {
+        delegate?.sendEvent(name: Self.eventJoinAttemptStarted, properties: [
+            Self.paramSource: source.metricsString,
+        ])
+    }
+
+    public func joinedConversation(verificationDuration: Float, memberCount: Int?, hasAssistant: Bool?, source: ConversationSource, isSuccess: Bool, failureReason: JoinFailureReason?, creatorReason: String?, attemptNumber: Int) async {
         delegate?.sendEvent(name: Self.eventJoinedConversation, properties: [
             Self.paramVerificationDuration: verificationDuration,
             Self.paramMemberCount: memberCount,
             Self.paramHasAssistant: hasAssistant,
             Self.paramSource: source.metricsString,
             Self.paramIsSuccess: isSuccess,
+            Self.paramFailureReason: failureReason?.metricsString,
+            Self.paramCreatorReason: creatorReason,
+            Self.paramAttemptNumber: attemptNumber,
         ])
     }
 
-    public func invitedToConversation(memberCount: Int, hasAssistant: Bool) async {
+    public func invitedToConversation(memberCount: Int, hasAssistant: Bool, isSuccess: Bool) async {
         delegate?.sendEvent(name: Self.eventInvitedToConversation, properties: [
             Self.paramMemberCount: memberCount,
             Self.paramHasAssistant: hasAssistant,
+            Self.paramIsSuccess: isSuccess,
         ])
     }
 
@@ -133,6 +143,7 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     }
 
     public static let eventStartedConversation: String = "started_conversation"
+    public static let eventJoinAttemptStarted: String = "join_attempt_started"
     public static let eventJoinedConversation: String = "joined_conversation"
     public static let eventInvitedToConversation: String = "invited_to_conversation"
     public static let eventAddedAssistant: String = "added_assistant"
@@ -147,11 +158,14 @@ public final class MetricsCoreActions: CoreActions, @unchecked Sendable {
     public static let eventPurchaseCancelled: String = "purchase_cancelled"
     public static let eventPurchaseFailed: String = "purchase_failed"
     public static let eventPurchasesRestored: String = "purchases_restored"
+    public static let paramSource: String = "source"
     public static let paramVerificationDuration: String = "verification_duration"
     public static let paramMemberCount: String = "member_count"
     public static let paramHasAssistant: String = "has_assistant"
-    public static let paramSource: String = "source"
     public static let paramIsSuccess: String = "is_success"
+    public static let paramFailureReason: String = "failure_reason"
+    public static let paramCreatorReason: String = "creator_reason"
+    public static let paramAttemptNumber: String = "attempt_number"
     public static let paramWaitDuration: String = "wait_duration"
     public static let paramStreamAgeSecs: String = "stream_age_secs"
     public static let paramPollTick: String = "poll_tick"

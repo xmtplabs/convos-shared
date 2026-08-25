@@ -16,6 +16,44 @@ extension ConversationSource {
     }
 }
 
+public enum JoinFailureReason: Sendable {
+    case approvalTimedOut
+    case inboxNeverReady
+    case inviteExpired
+    case conversationExpired
+    case conversationNotFound
+    case consentNotAllowed
+    case invalidCodeFormat
+    case signatureVerificationFailed
+    case networkServiceUnavailable
+    case networkTimedOut
+    case networkConnectionLost
+    case networkTlsFailure
+    case internalStorageError
+    case unknown
+}
+
+extension JoinFailureReason {
+    public var metricsString: String {
+        switch self {
+        case .approvalTimedOut: return "approval_timed_out"
+        case .inboxNeverReady: return "inbox_never_ready"
+        case .inviteExpired: return "invite_expired"
+        case .conversationExpired: return "conversation_expired"
+        case .conversationNotFound: return "conversation_not_found"
+        case .consentNotAllowed: return "consent_not_allowed"
+        case .invalidCodeFormat: return "invalid_code_format"
+        case .signatureVerificationFailed: return "signature_verification_failed"
+        case .networkServiceUnavailable: return "network_service_unavailable"
+        case .networkTimedOut: return "network_timed_out"
+        case .networkConnectionLost: return "network_connection_lost"
+        case .networkTlsFailure: return "network_tls_failure"
+        case .internalStorageError: return "internal_storage_error"
+        case .unknown: return "unknown"
+        }
+    }
+}
+
 public enum AssistantJoinSource: Sendable {
     case addToConversation
     case agentTemplate

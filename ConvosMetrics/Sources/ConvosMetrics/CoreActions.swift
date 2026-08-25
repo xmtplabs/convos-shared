@@ -1,7 +1,8 @@
 public protocol CoreActions: AnyObject, Sendable {
     func startedConversation() async
-    func joinedConversation(verificationDuration: Float, memberCount: Int?, hasAssistant: Bool?, source: ConversationSource, isSuccess: Bool) async
-    func invitedToConversation(memberCount: Int, hasAssistant: Bool) async
+    func joinAttemptStarted(source: ConversationSource) async
+    func joinedConversation(verificationDuration: Float, memberCount: Int?, hasAssistant: Bool?, source: ConversationSource, isSuccess: Bool, failureReason: JoinFailureReason?, creatorReason: String?, attemptNumber: Int) async
+    func invitedToConversation(memberCount: Int, hasAssistant: Bool, isSuccess: Bool) async
     func addedAssistant(memberCount: Int) async
     func assistantJoined(waitDuration: Float, source: AssistantJoinSource, memberCount: Int?, isSuccess: Bool) async
     func assistantJoinRescuedByPolling(streamAgeSecs: Float, pollTick: Int) async
